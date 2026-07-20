@@ -1,0 +1,33 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/inflectionio-openapi-original.yml
+docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/authentication.mdx
+summary:
+  types:
+  - http
+  http_schemes:
+  - bearer
+  token_type: personal-access-token
+  token_prefix: inf_pat_
+  scopes:
+  - READ
+  - WRITE
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: >-
+    Personal Access Token sent as a bearer credential (Authorization: Bearer [example key]).
+    Tokens are scoped READ (required for every GET) and WRITE (required for POST/PATCH/DELETE).
+  token_prefix: inf_pat_
+  scopes:
+  - name: READ
+    description: Required for every GET request.
+  - name: WRITE
+    description: Required for POST, PATCH, and DELETE requests.
+  failures:
+    '401': Missing, malformed, or invalid token (also returned for unknown paths/methods under /v1, deny-by-default).
+    '403': Token is valid but lacks the required scope (e.g. a READ token attempting a write).
+  notes: Gateway auth errors (401/403) return an empty body; the status code carries the meaning.
+  sources:
+  - openapi/inflectionio-openapi-original.yml
