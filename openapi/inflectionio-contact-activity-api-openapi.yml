@@ -1,0 +1,166 @@
+openapi: 3.1.0
+info:
+  title: Inflection Developer Contact Activity API
+  version: '1.0'
+  description: A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.
+servers:
+- url: https://api.inflection.io
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Contact Activity
+paths:
+  /v1/contacts/{id}/product-activity:
+    get:
+      operationId: getProductActivity
+      summary: Get product activity
+      tags:
+      - Contact Activity
+      description: A paged list of in-app product events (page views, clicks, custom events). Empty for a contact with no activity.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page_number
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        schema:
+          type: integer
+          default: 20
+          maximum: 200
+      - name: start_time
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: end_time
+        in: query
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Paged product activity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/marketing-activity:
+    get:
+      operationId: getMarketingActivity
+      summary: Get marketing activity
+      tags:
+      - Contact Activity
+      description: A paged list of marketing touches for the contact — email sends, opens, clicks, and journey activity.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Marketing activity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/activity-log:
+    get:
+      operationId: getActivityLog
+      summary: Get activity log
+      tags:
+      - Contact Activity
+      description: A combined, paged log of the contact's product and marketing activity in one stream.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Combined activity log.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/salesforce:
+    get:
+      operationId: getSalesforceRecord
+      summary: Get Salesforce record
+      tags:
+      - Contact Activity
+      description: Returns the contact's mapped Salesforce record as a free-form object. If the contact exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns `404`.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Salesforce record, or no data if unmapped.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+        '404':
+          description: Contact id does not exist.
+components:
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        data:
+          description: Payload — object or array, shape depends on the endpoint.
+        pagination:
+          type: object
+          description: Present only on paged list endpoints.
+          properties:
+            pageNumber:
+              type: integer
+              example: 1
+            pageSize:
+              type: integer
+              example: 20
+            totalElements:
+              type: integer
+              example: 151
+            totalPages:
+              type: integer
+              example: 8
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorCode:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+        meta:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - FAILURE
+            timestamp:
+              type: string
+              format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.
