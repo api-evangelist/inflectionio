@@ -1,0 +1,17 @@
+generated: '2026-07-19'
+method: searched
+hosts:
+- host: https://www.inflection.io
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+- host: https://api.inflection.io
+  documents:
+  - {path: /.well-known/security.txt, status: 401}
+notes: >-
+  No /.well-known discovery documents are published on the marketing host. The API gateway
+  (api.inflection.io) denies-by-default with 401 on unknown paths, so /.well-known probes there
+  return 401 rather than a document.

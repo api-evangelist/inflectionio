@@ -1,0 +1,619 @@
+openapi: 3.1.0
+info:
+  title: Inflection Developer API
+  version: "1.0"
+  description: >-
+    A REST API for reading and writing the people in your Inflection workspace —
+    their profiles, product and marketing activity, static lists, and email
+    templates.
+servers:
+  - url: https://api.inflection.io
+    description: Production
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        data:
+          description: Payload — object or array, shape depends on the endpoint.
+        pagination:
+          type: object
+          description: Present only on paged list endpoints.
+          properties:
+            pageNumber:
+              type: integer
+              example: 1
+            pageSize:
+              type: integer
+              example: 20
+            totalElements:
+              type: integer
+              example: 151
+            totalPages:
+              type: integer
+              example: 8
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorCode:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+        meta:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: [SUCCESS, FAILURE]
+            timestamp:
+              type: string
+              format: date-time
+    ContactProperties:
+      type: object
+      description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        _source:
+          type: string
+          description: Set by Inflection to identify the write source.
+      additionalProperties: true
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "0001760c4a86bc38a4a60bcceae32540"
+        email:
+          type: string
+          format: email
+        properties:
+          $ref: '#/components/schemas/ContactProperties'
+    Transaction:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          example: "34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d"
+        status:
+          type: string
+          enum: [PENDING, DONE, NOT_EXIST]
+        data:
+          type: object
+          description: Present when status is DONE.
+          properties:
+            results:
+              type: array
+              items:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  status:
+                    type: string
+                    enum: [CREATED, UPDATED, NO_CHANGE, FAILED]
+paths:
+  /v1/contacts/{id}:
+    get:
+      operationId: getContactById
+      summary: Get contact by ID
+      tags: [Contacts]
+      description: >-
+        Returns the full stored record under `data.properties` (snake_case
+        keys). A missing contact returns `400 BAS-E-002` (not the more
+        conventional `404`).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Contact found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Contact'
+        "400":
+          description: Contact not found (`BAS-E-002`).
+    patch:
+      operationId: updateContact
+      summary: Update a contact
+      tags: [Contacts]
+      description: >-
+        Enqueues an update (PENDING transaction), applied asynchronously.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                properties:
+                  $ref: '#/components/schemas/ContactProperties'
+      responses:
+        "200":
+          description: Update enqueued as a PENDING transaction.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Transaction'
+  /v1/contacts/by-email/{email}:
+    get:
+      operationId: getContactByEmail
+      summary: Get contact by email
+      tags: [Contacts]
+      description: >-
+        Returns the full stored record under `data.properties` (snake_case
+        keys). URL-encode the email (`@` → `%40`). A missing contact returns
+        `400 BAS-E-002`.
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema: { type: string }
+          example: jane%40acme.com
+      responses:
+        "200":
+          description: Contact found.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Contact'
+        "400":
+          description: Contact not found (`BAS-E-002`).
+  /v1/contacts:
+    post:
+      operationId: createContact
+      summary: Create a contact
+      tags: [Contacts]
+      description: >-
+        Enqueues a new contact and returns a PENDING transaction. Keys inside
+        `properties` must be **snake_case**.
+
+
+        `POST` is **create-only**. Re-posting an existing email resolves to
+        `FAILED` in the transaction result. To create-or-update, use **Batch
+        upsert contacts** instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                properties:
+                  $ref: '#/components/schemas/ContactProperties'
+            example:
+              email: jane@acme.com
+              properties:
+                first_name: Jane
+                company_name: Acme
+      responses:
+        "200":
+          description: Create enqueued as a PENDING transaction.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Transaction'
+  /v1/contacts/batch:
+    post:
+      operationId: batchUpsertContacts
+      summary: Batch upsert contacts
+      tags: [Contacts]
+      description: >-
+        Upserts up to 1,000 contacts in one transaction — new emails come
+        back `CREATED`, existing ones `UPDATED`. This is the reliable
+        create-or-update path for both new and existing contacts (single
+        `POST` is create-only).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contacts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                      properties:
+                        $ref: '#/components/schemas/ContactProperties'
+            example:
+              contacts:
+                - email: jane@acme.com
+                  properties: { first_name: Jane }
+                - email: raj@globex.com
+                  properties: { company_name: Globex }
+      responses:
+        "200":
+          description: Batch enqueued as a PENDING transaction.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Transaction'
+  /v1/contacts/transactions/{transactionId}:
+    get:
+      operationId: getContactTransaction
+      summary: Get a transaction
+      tags: [Contacts]
+      description: >-
+        Returns `PENDING`, `DONE` (with per-contact `results`), or
+        `NOT_EXIST` for an unknown id (still HTTP `200`). See
+        [Asynchronous writes](/api-reference/async-writes).
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Transaction status.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Transaction'
+  /v1/contacts/{id}/product-activity:
+    get:
+      operationId: getProductActivity
+      summary: Get product activity
+      tags: [Contact Activity]
+      description: >-
+        A paged list of in-app product events (page views, clicks, custom
+        events). Empty for a contact with no activity.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: page_number
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: page_size
+          in: query
+          schema: { type: integer, default: 20, maximum: 200 }
+        - name: start_time
+          in: query
+          schema: { type: string, format: date-time }
+        - name: end_time
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        "200":
+          description: Paged product activity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/marketing-activity:
+    get:
+      operationId: getMarketingActivity
+      summary: Get marketing activity
+      tags: [Contact Activity]
+      description: >-
+        A paged list of marketing touches for the contact — email sends,
+        opens, clicks, and journey activity.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Marketing activity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/activity-log:
+    get:
+      operationId: getActivityLog
+      summary: Get activity log
+      tags: [Contact Activity]
+      description: >-
+        A combined, paged log of the contact's product and marketing
+        activity in one stream.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Combined activity log.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/contacts/{id}/salesforce:
+    get:
+      operationId: getSalesforceRecord
+      summary: Get Salesforce record
+      tags: [Contact Activity]
+      description: >-
+        Returns the contact's mapped Salesforce record as a free-form
+        object. If the contact exists but has no Salesforce record, `data`
+        is omitted (still `200`). A bogus contact id returns `404`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Salesforce record, or no data if unmapped.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+        "404":
+          description: Contact id does not exist.
+  /v1/lists:
+    post:
+      operationId: createList
+      summary: Create a list
+      tags: [Lists and Members]
+      description: >-
+        Takes a `name` (and optional `folder`); a duplicate name returns
+        `400 LIST_ALREADY_EXISTS`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                folder: { type: string }
+      responses:
+        "200":
+          description: List created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+        "400":
+          description: Duplicate name (`LIST_ALREADY_EXISTS`).
+  /v1/lists/{id}:
+    get:
+      operationId: getList
+      summary: Get a list
+      tags: [Lists and Members]
+      description: Missing list returns `404 NOT_FOUND`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: List found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+        "404":
+          description: List not found.
+    patch:
+      operationId: updateList
+      summary: Update a list
+      tags: [Lists and Members]
+      description: >-
+        Returns only `{ "staticListId", "success": true }` — a confirmation
+        flag, not the updated list object. Re-fetch the list if you need
+        its new state.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+      responses:
+        "200":
+          description: Confirmation flag only.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  staticListId: { type: string }
+                  success: { type: boolean }
+    delete:
+      operationId: deleteList
+      summary: Delete a list
+      tags: [Lists and Members]
+      description: Soft delete — returns `200` with a result body.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: List deleted (soft delete).
+  /v1/lists/{id}/members:
+    get:
+      operationId: getListMembers
+      summary: Get list members
+      tags: [Lists and Members]
+      description: >-
+        Member records use **camelCase** field names (`firstName`,
+        `companyName`, `phoneNumber`) — unlike the snake_case that contact
+        lookups return for the same person.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: page_number
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: page_size
+          in: query
+          schema: { type: integer, default: 20, maximum: 200 }
+      responses:
+        "200":
+          description: Paged list members.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+    post:
+      operationId: addListMembers
+      summary: Add list members
+      tags: [Lists and Members]
+      description: >-
+        Add members by contact id. Unknown ids are skipped and reported in
+        `errors` with a still-successful `200` (partial success); the
+        response reports how many were `added`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contactIds:
+                  type: array
+                  items: { type: string }
+      responses:
+        "200":
+          description: Members added (partial success reported in `errors`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Envelope'
+  /v1/lists/{id}/members/{contactId}:
+    delete:
+      operationId: removeListMember
+      summary: Remove a list member
+      tags: [Lists and Members]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: contactId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Member removed.
+  /v1/email-templates:
+    post:
+      operationId: createEmailTemplate
+      summary: Create an email template
+      tags: [Email Templates]
+      description: >-
+        Templates are **create-only** over the API — there's no read,
+        update, or delete route. After creating, edit in the UI via the
+        returned `editorUrl`.
+
+
+        - The from-email domain must be org-approved, otherwise `400
+          UnapprovedEmailDomainException`.
+        - HTML tokens are validated — an unknown token returns `400
+          UnknownVariablesException`.
+        - A duplicate name returns `409 TEMPLATE_ALREADY_EXISTS`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, html, subject, fromEmail]
+              properties:
+                name: { type: string }
+                html: { type: string }
+                subject: { type: string }
+                fromEmail: { type: string }
+                replyTo: { type: string }
+      responses:
+        "200":
+          description: Template created, with an editorUrl to continue in the UI.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          editorUrl: { type: string }
+        "400":
+          description: Unapproved domain or unknown token.
+        "409":
+          description: Duplicate template name.

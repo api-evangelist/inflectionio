@@ -1,0 +1,20 @@
+{
+  "provider": "inflectionio",
+  "sources": [
+    "inflectionio-contact-activity-api-openapi.yml",
+    "inflectionio-contacts-api-openapi.yml",
+    "inflectionio-email-templates-api-openapi.yml",
+    "inflectionio-lists-and-members-api-openapi.yml"
+  ],
+  "outputs": [
+    "inflectionio-contact-activity-api-openapi.yml",
+    "inflectionio-contacts-api-openapi.yml",
+    "inflectionio-email-templates-api-openapi.yml",
+    "inflectionio-lists-and-members-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

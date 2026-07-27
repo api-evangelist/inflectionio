@@ -1,0 +1,51 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+docs: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+summary: >-
+  Cross-cutting request/response semantics for the Inflection Developer API — a JSON-over-HTTPS
+  REST API under https://api.inflection.io/v1, authenticated with scoped Personal Access Tokens,
+  wrapping every response in a consistent data/pagination/errors/meta envelope.
+authentication:
+  style: bearer-token
+  header: Authorization
+  format: Bearer inf_pat_...
+  scopes: [READ, WRITE]
+  see: authentication/inflectionio-authentication.yml
+idempotency:
+  supported: false
+  note: No idempotency-key header or parameter is documented or present in the OpenAPI. Contact writes are async and deduplicated by upsert semantics (batch upsert on email), not by an idempotency key.
+pagination:
+  style: page-number
+  params:
+    page_number: {default: 1, note: 1-based page index}
+    page_size: {default: 20, max: 200}
+  response_fields: [pageNumber, pageSize, totalElements, totalPages]
+  location: pagination (present only on paged list endpoints)
+response_envelope:
+  fields:
+    data: Payload — object or array; shape depends on the endpoint.
+    pagination: Present only on paged list endpoints.
+    errors: Populated on service-level failures (errorCode, message, detail).
+    meta: {status: SUCCESS|FAILURE, timestamp: ISO-8601}
+  note: Gateway-level auth errors (401/403) have no body at all; only service errors carry the envelope.
+  field_case: snake_case (contact attributes under properties use snake_case keys)
+async_writes:
+  applies_to: [createContact, updateContact, batchUpsertContacts]
+  model: Contact writes return HTTP 200 with a PENDING transaction (transactionId + status); poll GET /v1/contacts/transactions/{transactionId} until status is DONE.
+  per_contact_status: [CREATED, UPDATED, NO_CHANGE, FAILED]
+  unknown_transaction: NOT_EXIST (still HTTP 200)
+  see: skills/inflectionio-sync-contact.md
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.inflection.io/v1
+  see: lifecycle/inflectionio-lifecycle.yml
+errors:
+  envelope_field: errors[]
+  code_field: errorCode
+  format: custom (not RFC 9457 problem+json)
+  see: errors/inflectionio-problem-types.yml
+rate_limiting:
+  documented: false
+  note: No rate-limit policy or response headers are documented in the public API reference.

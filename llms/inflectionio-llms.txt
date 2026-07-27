@@ -1,0 +1,32 @@
+# Inflection.io
+
+> Inflection is a B2B marketing automation platform — a modern, AI-native replacement for legacy tools like Marketo — that unifies target accounts, product users, customers, and leads with product-usage, sales, and behavioral signals to build audiences, draft campaigns, map journeys, and report to the CMO. The Inflection Developer API is a JSON-over-HTTPS REST API for reading and writing the people in your workspace: their profiles, product and marketing activity, static lists, and email templates.
+
+## API
+- [Inflection Developer API (OpenAPI 3.1)](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/openapi/inflectionio-openapi-original.yml): 18 operations across Contacts, contact activity, Lists & members, and Email templates. Base https://api.inflection.io/v1. Bearer Personal Access Token (READ/WRITE scopes). Live Swagger UI at https://api.inflection.io/docs.
+
+## Docs
+- [Introduction](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx): The four core resources.
+- [Quickstart](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/quickstart.mdx): Zero to first response in two calls.
+- [Authentication](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/authentication.mdx): Personal Access Tokens and READ/WRITE scopes; 401 vs 403.
+- [Pagination](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/pagination.mdx): 1-based page_number/page_size.
+- [Response envelope](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/response-envelope.mdx): The data/pagination/errors/meta shape.
+- [Asynchronous writes](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/async-writes.mdx): Contact writes return a transaction you poll.
+- [Errors & status codes](https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/errors.mdx): Error codes and 400/404/409 semantics.
+
+## Specs & artifacts
+- [Authentication profile](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/authentication/inflectionio-authentication.yml)
+- [API conventions](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/conventions/inflectionio-conventions.yml)
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/errors/inflectionio-problem-types.yml)
+- [Data model](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/data-model/inflectionio-data-model.yml)
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/lifecycle/inflectionio-lifecycle.yml)
+- [Agentic access contracts](https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/agentic-access/inflectionio-agentic-access.yml)
+
+## Company
+- [Website](https://www.inflection.io)
+- [Pricing](https://www.inflection.io/pricing)
+- [Blog](https://www.inflection.io/blog)
+- [Help Center](https://docs.inflection.io)
+- [Login](https://app.inflection.io/login/start)
+- [Terms of Service](https://www.inflection.io/legal/terms)
+- [Privacy Policy](https://www.inflection.io/legal/privacy-policy)

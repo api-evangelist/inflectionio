@@ -1,0 +1,18 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.inflection.io/v1
+  docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+deprecation:
+  policy_documented: false
+  sunset_header: false
+  note: No deprecation policy or RFC 8594 Sunset/Deprecation header support is documented; no operations are marked deprecated in the OpenAPI.
+sla:
+  documented: false
+status_page:
+  found: false
+  note: No public status page (status.inflection.io does not resolve) was found as of this probe.
+deprecated_operations: []

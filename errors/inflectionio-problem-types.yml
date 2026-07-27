@@ -1,0 +1,49 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/inflectionio-openapi-original.yml
+docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/errors.mdx
+format: custom-envelope
+envelope:
+  location: errors[]
+  fields: [errorCode, message, detail]
+  meta_status_on_failure: FAILURE
+  note: >-
+    Errors are returned inside the standard response envelope (errors[] populated, meta.status = FAILURE).
+    Gateway-level auth errors (401/403) are the exception — they return an empty body with no envelope.
+problems:
+- status: 400
+  code: BAS-E-002
+  title: Contact not found
+  detail: Returned when a contact cannot be found by id or by email.
+  source_operations:
+  - openapi/inflectionio-openapi-original.yml#getContactById
+  - openapi/inflectionio-openapi-original.yml#getContactByEmail
+- status: 404
+  code: NOT_FOUND
+  title: List or template not found
+  detail: Returned when a list or email template cannot be found.
+  source_operations:
+  - openapi/inflectionio-openapi-original.yml#getList
+  - openapi/inflectionio-openapi-original.yml#getSalesforceRecord
+- status: 400
+  code: LIST_ALREADY_EXISTS
+  title: Duplicate list name
+  detail: Returned when creating a list whose name already exists.
+  source_operations:
+  - openapi/inflectionio-openapi-original.yml#createList
+- status: 409
+  code: TEMPLATE_ALREADY_EXISTS
+  title: Duplicate template name
+  detail: Returned when creating an email template whose name already exists.
+  source_operations:
+  - openapi/inflectionio-openapi-original.yml#createEmailTemplate
+auth_status_codes:
+- status: 401
+  title: Unauthorized
+  detail: Missing, malformed, or invalid token. Also returned (deny-by-default) for unknown paths/methods under /v1. Empty body.
+- status: 403
+  title: Forbidden
+  detail: Token is valid but lacks the required scope (e.g. a READ token attempting a write). Empty body.
+notes: >-
+  A missing contact returns 400 (BAS-E-002) while a missing list or template returns 404 (NOT_FOUND) —
+  handle both; there is no single not-found code across resources.

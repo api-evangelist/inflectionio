@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/inflectionio-openapi-original.yml
+skills:
+- file: inflectionio-sync-contact.md
+  name: Sync a contact into Inflection
+  api: openapi/inflectionio-openapi-original.yml
+  operations: [getContactByEmail, createContact, updateContact, getContactTransaction]
+- file: inflectionio-batch-upsert-contacts.md
+  name: Batch upsert contacts
+  api: openapi/inflectionio-openapi-original.yml
+  operations: [batchUpsertContacts, getContactTransaction]
+- file: inflectionio-build-static-list.md
+  name: Build and populate a static list
+  api: openapi/inflectionio-openapi-original.yml
+  operations: [createList, addListMembers, getListMembers, removeListMember]

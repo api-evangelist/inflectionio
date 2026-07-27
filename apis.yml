@@ -1,22 +1,108 @@
 aid: inflectionio
 name: Inflection.io
-description: 'Inflection.io is a company surfaced as a portfolio company of version-one-ventures and added
-  to the API Evangelist network as a stub for enrichment. Sector: saas. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: >-
+  Inflection.io is a B2B marketing automation platform positioned as a modern, AI-native replacement
+  for legacy tools like Marketo. It unifies target accounts, product users, customers, and leads with
+  product-usage, sales, and behavioral signals so marketing teams can build audiences, draft campaigns,
+  map customer journeys, score accounts, and report to the CMO — executing in minutes rather than weeks.
+  The Inflection Developer API is a JSON-over-HTTPS REST API (OpenAPI 3.1, base https://api.inflection.io/v1)
+  for reading and writing the people in a workspace: their profiles, product and marketing activity,
+  static lists, and email templates, authenticated with scoped Personal Access Tokens. Surfaced as a
+  version-one-ventures portfolio company and enriched from the provider's public developer API surface.
 url: https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.inflection.io/img/asset/YXNzZXRzL29nLWltYWdlLmpwZw/og-image.jpg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - version-one-ventures
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: public-developer-api
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
 - Saas
-apis: []
+- Marketing
+- Marketing Automation
+- Email Marketing
+- Customer Data
+- B2B
+- Contacts
+- API
+apis:
+- aid: inflectionio:inflectionio-contact-activity-api
+  name: Inflection.io Contact Activity API
+  description: The Contact Activity API from Inflection.io — 4 operation(s) for contact activity.
+  humanURL: >-
+    https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+  baseURL: https://api.inflection.io/v1
+  tags:
+  - Contact Activity
+  properties:
+  - type: OpenAPI
+    url: openapi/inflectionio-contact-activity-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+  - type: APIReference
+    url: https://api.inflection.io/docs
+- aid: inflectionio:inflectionio-contacts-api
+  name: Inflection.io Contacts API
+  description: The Contacts API from Inflection.io — 5 operation(s) for contacts.
+  humanURL: >-
+    https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+  baseURL: https://api.inflection.io/v1
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/inflectionio-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+  - type: APIReference
+    url: https://api.inflection.io/docs
+- aid: inflectionio:inflectionio-email-templates-api
+  name: Inflection.io Email Templates API
+  description: The Email Templates API from Inflection.io — 1 operation(s) for email templates.
+  humanURL: >-
+    https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+  baseURL: https://api.inflection.io/v1
+  tags:
+  - Email Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/inflectionio-email-templates-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+  - type: APIReference
+    url: https://api.inflection.io/docs
+- aid: inflectionio:inflectionio-lists-and-members-api
+  name: Inflection.io Lists and Members API
+  description: The Lists and Members API from Inflection.io — 4 operation(s) for lists and members.
+  humanURL: >-
+    https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+  baseURL: https://api.inflection.io/v1
+  tags:
+  - Lists and Members
+  properties:
+  - type: OpenAPI
+    url: openapi/inflectionio-lists-and-members-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+  - type: APIReference
+    url: https://api.inflection.io/docs
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -25,3 +111,62 @@ maintainers:
 common:
 - type: Website
   url: https://www.inflection.io
+- type: DeveloperPortal
+  url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+- type: Documentation
+  url: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+- type: APIReference
+  url: https://api.inflection.io/docs
+- type: GettingStarted
+  url: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/quickstart.mdx
+- type: HelpCenter
+  url: https://docs.inflection.io
+- type: Support
+  url: https://docs.inflection.io
+- type: Blog
+  url: https://www.inflection.io/blog
+- type: Pricing
+  url: https://www.inflection.io/pricing
+- type: SignUp
+  url: https://app.inflection.io/login/start
+- type: Login
+  url: https://app.inflection.io/login/start
+- type: TermsOfService
+  url: https://www.inflection.io/legal/terms
+- type: PrivacyPolicy
+  url: https://www.inflection.io/legal/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/inflectionio
+- type: OpenAPI
+  url: openapi/inflectionio-openapi-original.yml
+- type: Overlay
+  url: overlays/inflectionio-openapi-overlay.yaml
+- type: Authentication
+  url: authentication/inflectionio-authentication.yml
+- type: Conventions
+  url: conventions/inflectionio-conventions.yml
+- type: ErrorCatalog
+  url: errors/inflectionio-problem-types.yml
+- type: DataModel
+  url: data-model/inflectionio-data-model.yml
+- type: Lifecycle
+  url: lifecycle/inflectionio-lifecycle.yml
+- type: Conformance
+  url: conformance/inflectionio-conformance.yml
+- type: MCPServer
+  url: mcp/inflectionio-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: WellKnown
+  url: well-known/inflectionio-well-known.yml
+- type: LLMsTxt
+  url: llms/inflectionio-llms.txt
+- type: AgenticAccess
+  url: agentic-access/inflectionio-agentic-access.yml
+- type: DomainSecurity
+  url: security/inflectionio-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

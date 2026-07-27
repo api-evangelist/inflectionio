@@ -1,0 +1,30 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/inflectionio-openapi-original.yml
+note: >-
+  No official hosted/remote MCP server was found for Inflection.io as of this probe. This is a
+  candidate tool surface derived one-tool-per-operation from the Inflection Developer API OpenAPI,
+  to guide an MCP wrapper. Auth: bearer Personal Access Token (READ for GET tools, WRITE for the rest).
+server:
+  name: inflectionio
+  transport: http
+tools:
+- {name: get_contact_by_id, description: Get a contact by id, source_operation: openapi/inflectionio-openapi-original.yml#getContactById}
+- {name: get_contact_by_email, description: Get a contact by email, source_operation: openapi/inflectionio-openapi-original.yml#getContactByEmail}
+- {name: create_contact, description: Create a contact (async), source_operation: openapi/inflectionio-openapi-original.yml#createContact}
+- {name: update_contact, description: Update a contact (async), source_operation: openapi/inflectionio-openapi-original.yml#updateContact}
+- {name: batch_upsert_contacts, description: Batch upsert contacts by email (async), source_operation: openapi/inflectionio-openapi-original.yml#batchUpsertContacts}
+- {name: get_contact_transaction, description: Poll an async contact-write transaction, source_operation: openapi/inflectionio-openapi-original.yml#getContactTransaction}
+- {name: get_product_activity, description: List a contact's product activity, source_operation: openapi/inflectionio-openapi-original.yml#getProductActivity}
+- {name: get_marketing_activity, description: List a contact's marketing activity, source_operation: openapi/inflectionio-openapi-original.yml#getMarketingActivity}
+- {name: get_activity_log, description: Get a contact's combined activity log, source_operation: openapi/inflectionio-openapi-original.yml#getActivityLog}
+- {name: get_salesforce_record, description: Get the Salesforce record mapped to a contact, source_operation: openapi/inflectionio-openapi-original.yml#getSalesforceRecord}
+- {name: create_list, description: Create a static list, source_operation: openapi/inflectionio-openapi-original.yml#createList}
+- {name: get_list, description: Get a static list, source_operation: openapi/inflectionio-openapi-original.yml#getList}
+- {name: update_list, description: Update a static list, source_operation: openapi/inflectionio-openapi-original.yml#updateList}
+- {name: delete_list, description: Delete a static list, source_operation: openapi/inflectionio-openapi-original.yml#deleteList}
+- {name: get_list_members, description: List members of a static list, source_operation: openapi/inflectionio-openapi-original.yml#getListMembers}
+- {name: add_list_members, description: Add members to a static list, source_operation: openapi/inflectionio-openapi-original.yml#addListMembers}
+- {name: remove_list_member, description: Remove a member from a static list, source_operation: openapi/inflectionio-openapi-original.yml#removeListMember}
+- {name: create_email_template, description: Create a reusable email template, source_operation: openapi/inflectionio-openapi-original.yml#createEmailTemplate}

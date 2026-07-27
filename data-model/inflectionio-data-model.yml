@@ -1,0 +1,74 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/inflectionio-openapi-original.yml
+entities:
+- name: Contact
+  description: A person in the workspace — identified by id or email, with attributes under properties (snake_case).
+  id_field: id
+  alt_key: email
+  fields: [id, email, properties]
+  operations: [getContactById, getContactByEmail, createContact, updateContact, batchUpsertContacts]
+- name: ContactProperties
+  description: Attribute bag on a Contact (first_name, last_name, company_name, _source, plus workspace-defined keys).
+  embedded_in: Contact
+- name: Transaction
+  description: Acknowledgement of an asynchronous contact write; polled to completion.
+  id_field: transactionId
+  fields: [transactionId, status, data]
+  status_values: [PENDING, DONE, NOT_EXIST]
+  operations: [getContactTransaction]
+- name: List
+  description: A static list of contacts.
+  id_field: id
+  operations: [createList, getList, updateList, deleteList]
+- name: ListMember
+  description: The membership join of a Contact on a List.
+  operations: [getListMembers, addListMembers, removeListMember]
+- name: EmailTemplate
+  description: A reusable email template that opens in the Inflection editor.
+  operations: [createEmailTemplate]
+- name: ProductActivity
+  description: A contact's product usage events.
+  operations: [getProductActivity]
+- name: MarketingActivity
+  description: A contact's marketing engagement events.
+  operations: [getMarketingActivity]
+- name: ActivityLog
+  description: A contact's combined product + marketing activity log.
+  operations: [getActivityLog]
+- name: SalesforceRecord
+  description: The Salesforce record mapped to a contact.
+  operations: [getSalesforceRecord]
+relationships:
+- from: Contact
+  to: ProductActivity
+  type: has_many
+  via: contact id (/v1/contacts/{id}/product-activity)
+- from: Contact
+  to: MarketingActivity
+  type: has_many
+  via: contact id (/v1/contacts/{id}/marketing-activity)
+- from: Contact
+  to: ActivityLog
+  type: has_many
+  via: contact id (/v1/contacts/{id}/activity-log)
+- from: Contact
+  to: SalesforceRecord
+  type: has_one
+  via: contact id (/v1/contacts/{id}/salesforce)
+- from: List
+  to: Contact
+  type: has_many
+  via: list members (/v1/lists/{id}/members)
+- from: ListMember
+  to: Contact
+  type: belongs_to
+  via: contactId
+- from: ListMember
+  to: List
+  type: belongs_to
+  via: list id
+- from: Transaction
+  to: Contact
+  type: has_many
+  via: async write results (results[].email)

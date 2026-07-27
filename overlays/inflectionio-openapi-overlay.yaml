@@ -1,0 +1,23 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Inflection Developer API
+  version: 1.0.0
+extends: openapi/inflectionio-openapi-original.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-19'
+    x-apievangelist-artifacts:
+      authentication: authentication/inflectionio-authentication.yml
+      conventions: conventions/inflectionio-conventions.yml
+      errors: errors/inflectionio-problem-types.yml
+      data-model: data-model/inflectionio-data-model.yml
+      lifecycle: lifecycle/inflectionio-lifecycle.yml
+      conformance: conformance/inflectionio-conformance.yml
+      agentic-access: agentic-access/inflectionio-agentic-access.yml
+- target: $.info
+  update:
+    x-apievangelist-notes: >-
+      Reads are synchronous; contact writes (POST/PATCH /v1/contacts*) are asynchronous and return a
+      PENDING transaction to poll. Errors use a custom data/errors/meta envelope (not RFC 9457). Auth is
+      a scoped Personal Access Token (READ/WRITE).
