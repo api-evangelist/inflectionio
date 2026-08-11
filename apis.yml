@@ -138,7 +138,7 @@ common:
 - type: GitHubOrganization
   url: https://github.com/inflectionio
 - type: OpenAPI
-  url: openapi/inflectionio-openapi-original.yml
+  url: openapi/_original/inflectionio-openapi-original.yml
 - type: Overlay
   url: overlays/inflectionio-openapi-overlay.yaml
 - type: Authentication
