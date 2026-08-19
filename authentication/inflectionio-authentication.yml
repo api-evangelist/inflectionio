@@ -1,33 +1,90 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: openapi/inflectionio-openapi-original.yml
-docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/authentication.mdx
+source: https://docs.inflection.io/api-reference/authentication
+docs: https://docs.inflection.io/api-reference/authentication
 summary:
   types:
   - http
+  - oauth2
   http_schemes:
   - bearer
-  token_type: personal-access-token
+  oauth2_flows:
+  - authorizationCode
+  token_types:
+  - personal-access-token
+  - oauth2-access-token
   token_prefix: inf_pat_
-  scopes:
+  permissions:
   - READ
   - WRITE
+  oauth2_scopes:
+  - inflection_app
+  note: >-
+    The OpenAPI declares only the http/bearer scheme. OAuth 2.1 is real and documented but invisible in
+    the spec — it is captured here from the docs and from live RFC 8414 / RFC 9728 discovery documents.
 schemes:
 - name: bearerAuth
   type: http
   scheme: bearer
   description: >-
-    Personal Access Token sent as a bearer credential (Authorization: Bearer [example key]).
-    Tokens are scoped READ (required for every GET) and WRITE (required for POST/PATCH/DELETE).
+    Personal Access Token or OAuth 2.1 access token sent as a bearer credential
+    (Authorization: Bearer <token>). PATs are scoped READ (required for every GET) and WRITE (required
+    for POST/PATCH/DELETE); OAuth tokens act as the user who authorized the app.
   token_prefix: inf_pat_
-  scopes:
+  issuance: Inflection dashboard, Settings > Connected Apps > Personal Access Tokens > Create app credentials
+  lifetime: long-lived, valid until revoked
+  shown_once: true
+  best_practice: one token per integration so a single revoke does not break the others
+  permissions:
   - name: READ
     description: Required for every GET request.
   - name: WRITE
     description: Required for POST, PATCH, and DELETE requests.
-  failures:
-    '401': Missing, malformed, or invalid token (also returned for unknown paths/methods under /v1, deny-by-default).
-    '403': Token is valid but lacks the required scope (e.g. a READ token attempting a write).
-  notes: Gateway auth errors (401/403) return an empty body; the status code carries the meaning.
+  applies_to: [https://api.inflection.io/v1]
+  not_valid_for:
+  - https://mcp.inflection.io/ — PATs explicitly do NOT work for MCP; MCP clients use a connected app's OAuth flow.
   sources:
-  - openapi/inflectionio-openapi-original.yml
+  - openapi/_original/inflectionio-openapi-original.yml
+  - https://docs.inflection.io/api-reference/get-your-pat
+- name: OAuth 2.1 Connected App
+  type: oauth2
+  description: >-
+    OAuth 2.1 with PKCE (S256 required, plain rejected) for multi-user apps, automation platforms and
+    any client that should not hold a long-lived secret. The same access token works on the Developer
+    API and on the MCP server.
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://auth-v2.inflection.io/oauth2/authorize
+    tokenUrl: https://auth-v2.inflection.io/oauth2/token
+    revocationUrl: https://auth-v2.inflection.io/oauth2/revoke
+    introspectionUrl: https://auth-v2.inflection.io/oauth2/introspect
+    jwksUri: https://auth-v2.inflection.io/oauth2/jwks
+    registrationUrl: https://auth-v2.inflection.io/client-app/connect/register
+    scopes: [inflection_app]
+  discovery:
+    authorization_server_metadata: https://auth-v2.inflection.io/.well-known/oauth-authorization-server
+    protected_resource_metadata: https://mcp.inflection.io/.well-known/oauth-protected-resource
+    specs: [RFC 8414, RFC 9728]
+  authorization_model: >-
+    Acts as the user who authorized the app — workspace admins and members read and write, viewers are
+    read-only. There is no client-credentials grant; service-to-service tokens are rejected with 403.
+  token_lifetime_seconds: 900
+  refresh: refresh_token grant with rotation and reuse detection
+  authorization_code_ttl_seconds: 300
+  client_auth_methods: [client_secret_basic, client_secret_post, private_key_jwt]
+  applies_to:
+  - https://api.inflection.io/v1
+  - https://mcp.inflection.io/
+  - https://campaign.inflection.io/api/v1
+  sources:
+  - https://docs.inflection.io/agents/connected-apps-oauth
+  - https://auth-v2.inflection.io/.well-known/oauth-authorization-server
+  see: scopes/inflectionio-scopes.yml
+failures:
+  '401': >-
+    Missing, malformed, or invalid token. Also returned for unknown paths/methods under /v1
+    (deny-by-default) — a mistyped path is indistinguishable from a bad credential.
+  '403': >-
+    Token is valid but lacks the required permission — a READ-scoped PAT attempting a write, a viewer's
+    OAuth token doing the same, or a service-to-service token with no user behind it.
+  body: Gateway auth errors (401/403) return an empty body; the status code carries the meaning.

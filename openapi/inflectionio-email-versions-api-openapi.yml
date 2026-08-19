@@ -1,0 +1,145 @@
+openapi: 3.1.0
+info:
+  title: Inflection Developer API — Email Versions
+  version: '1.0'
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
+    product and marketing activity, static lists, and emails.'
+servers:
+- url: https://api.inflection.io
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Email Versions
+paths:
+  /v1/email-versions:
+    post:
+      operationId: setEmailVersion
+      summary: Set a personalized email version
+      tags:
+      - Email Versions
+      description: 'Stores the personalized version of a [Personalized Email Asset](/agents/personalized-email)
+        for one contact. One version per contact per asset; re-posting for the same contact replaces their
+        version. At send time the contact receives their version if it''s ready; contacts without one
+        get the asset''s default email.
+
+
+        Validation on arrival: `email` must resolve to an existing contact, and `html` must contain the
+        literal `{{unsubscribe_url}}` token, contain no other `{{…}}` tokens, and stay within 500 KB.
+        A version that fails validation is rejected with a reason (visible on the asset''s **Activity**
+        tab) and the default email sends instead.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - assetId
+              - email
+              - subject
+              - preheader
+              - html
+              properties:
+                assetId:
+                  type: string
+                  description: ID of the Personalized Email Asset. Copy it from the asset URL (`…/assets/email/per-user/<ASSET_ID>/versions`)
+                    or its **How to add versions** tab.
+                email:
+                  type: string
+                  format: email
+                  description: The contact's email. Must match an existing contact.
+                subject:
+                  type: string
+                  description: The personalized subject line.
+                preheader:
+                  type: string
+                  description: The inbox preview text.
+                html:
+                  type: string
+                  description: Full HTML of the personalized email. Must include the literal `{{unsubscribe_url}}`
+                    token; no other `{{…}}` tokens are allowed. Max 500 KB.
+                expiresAt:
+                  type: string
+                  format: date-time
+                  description: Optional ISO-8601 expiry. After this moment the contact falls back to the
+                    default email. Omit for a version that never expires.
+            example:
+              assetId: 6a60ee387b78bbc9a263aba0
+              email: contact@example.com
+              subject: A note just for you
+              preheader: Personalized for you
+              html: <!doctype html>…<a href="{{unsubscribe_url}}">Unsubscribe</a>…
+              expiresAt: '2030-01-01T00:00:00Z'
+      responses:
+        '200':
+          description: Version stored.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          example: stored
+        '400':
+          description: 'Validation failed: malformed JSON, unknown `assetId`, contact not found, missing
+            `{{unsubscribe_url}}`, a disallowed `{{…}}` token, or HTML over 500 KB.'
+        '401':
+          description: Missing or malformed bearer token.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
+        permission for GET, WRITE for POST/PATCH/DELETE.
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        data:
+          description: 'Payload: object or array, shape depends on the endpoint.'
+        pagination:
+          type: object
+          description: Present only on paged list endpoints.
+          properties:
+            pageNumber:
+              type: integer
+              example: 1
+            pageSize:
+              type: integer
+              example: 20
+            totalElements:
+              type: integer
+              example: 151
+            totalPages:
+              type: integer
+              example: 8
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorCode:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+        meta:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - FAILURE
+            timestamp:
+              type: string
+              format: date-time

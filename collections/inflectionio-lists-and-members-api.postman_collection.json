@@ -1,0 +1,888 @@
+{
+  "item": [
+    {
+      "id": "ec864b44-31b1-418b-990f-0c2b4f24883c",
+      "name": "Lists and Members",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "eb9335c5-656f-42bc-b865-eb74ba9f8449",
+          "name": "Create a list",
+          "request": {
+            "name": "Create a list",
+            "description": {
+              "content": "Takes a `name` (and optional `folder`); a duplicate name returns `400 LIST_ALREADY_EXISTS`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"folder\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a3431ec5-1695-4eea-bd85-5f4b286f7528",
+              "name": "List created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"folder\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1969-04-15T07:07:51.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5caece32-1f5c-402e-bcf2-9cf4d3a3c5aa",
+              "name": "Duplicate name (`LIST_ALREADY_EXISTS`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"folder\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0d61fd6e-320c-4391-8dd9-432c3a894e8e",
+          "name": "Get a list",
+          "request": {
+            "name": "Get a list",
+            "description": {
+              "content": "Missing list returns `404 NOT_FOUND`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "636be406-8675-4bc3-a6a1-87ac5fd68b16",
+              "name": "List found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1969-04-15T07:07:51.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "682b20ef-f970-45d2-8800-d53081e4cf8c",
+              "name": "List not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1280f6e8-bff1-451b-b416-7ca2161e1b10",
+          "name": "Update a list",
+          "request": {
+            "name": "Update a list",
+            "description": {
+              "content": "Returns only `{ \"staticListId\", \"success\": true }` — a confirmation flag, not the updated list object. Re-fetch the list if you need its new state.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "efb22f16-1fa5-467d-9c4a-60a6f73f9f1d",
+              "name": "Confirmation flag only.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"staticListId\": \"string\",\n  \"success\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b89c48e9-bcbc-408b-a998-0da36dbecd99",
+          "name": "Delete a list",
+          "request": {
+            "name": "Delete a list",
+            "description": {
+              "content": "Soft delete — returns `200` with a result body.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "637f4aec-2d51-416e-b62c-f9e9da662945",
+              "name": "List deleted (soft delete).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "960a2809-916f-4007-9486-05e077da9585",
+          "name": "Get list members",
+          "request": {
+            "name": "Get list members",
+            "description": {
+              "content": "Member records use **camelCase** field names (`firstName`, `companyName`, `phoneNumber`) — unlike the snake_case that contact lookups return for the same person.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id",
+                "members"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_number",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "93720cf7-5619-47a8-a3bb-4c9dffe608c7",
+              "name": "Paged list members.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id",
+                    "members"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_number",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1969-04-15T07:07:51.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "495bd5ce-b2cd-4791-a0fe-aa2ef2026417",
+          "name": "Add list members",
+          "request": {
+            "name": "Add list members",
+            "description": {
+              "content": "Add members by contact id. Unknown ids are skipped and reported in `errors` with a still-successful `200` (partial success); the response reports how many were `added`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id",
+                "members"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contactIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "82ad88de-7440-4823-b789-2997398241c5",
+              "name": "Members added (partial success reported in `errors`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id",
+                    "members"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contactIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1969-04-15T07:07:51.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2349543a-7948-464a-b5ab-542232592df4",
+          "name": "Remove a list member",
+          "request": {
+            "name": "Remove a list member",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "lists",
+                ":id",
+                "members",
+                ":contactId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contactId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "93d8fab9-84f7-4a20-83f3-2c597beb081a",
+              "name": "Member removed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "lists",
+                    ":id",
+                    "members",
+                    ":contactId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.inflection.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2cd4c2cd-ba62-4b07-93c7-a600e7544755",
+    "name": "Inflection Developer Contact Activity Lists and Members API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,8 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Inflection Developer Contact Activity API
+  title: Inflection Developer API — Contact Activity
   version: '1.0'
-  description: A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
+    product and marketing activity, static lists, and emails.'
 servers:
 - url: https://api.inflection.io
   description: Production
@@ -17,7 +18,8 @@ paths:
       summary: Get product activity
       tags:
       - Contact Activity
-      description: A paged list of in-app product events (page views, clicks, custom events). Empty for a contact with no activity.
+      description: A paged list of in-app product events (login, signup, custom events). Empty for a contact
+        with no product activity, and for an unknown contact id.
       parameters:
       - name: id
         in: path
@@ -58,7 +60,8 @@ paths:
       summary: Get marketing activity
       tags:
       - Contact Activity
-      description: A paged list of marketing touches for the contact — email sends, opens, clicks, and journey activity.
+      description: 'A paged list of marketing touches for the contact: email sends, opens, clicks, and
+        journey activity.'
       parameters:
       - name: id
         in: path
@@ -78,7 +81,9 @@ paths:
       summary: Get activity log
       tags:
       - Contact Activity
-      description: A combined, paged log of the contact's product and marketing activity in one stream.
+      description: 'A paged change log of the contact''s record: updates to contact properties and to
+        the properties of the underlying product-user record. For engagement and events, use the product-activity
+        and marketing-activity endpoints instead.'
       parameters:
       - name: id
         in: path
@@ -87,7 +92,7 @@ paths:
           type: string
       responses:
         '200':
-          description: Combined activity log.
+          description: Paged log of record property changes.
           content:
             application/json:
               schema:
@@ -98,7 +103,9 @@ paths:
       summary: Get Salesforce record
       tags:
       - Contact Activity
-      description: Returns the contact's mapped Salesforce record as a free-form object. If the contact exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns `404`.
+      description: Returns the contact's mapped Salesforce record as a free-form object. If the contact
+        exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns
+        `404`.
       parameters:
       - name: id
         in: path
@@ -115,12 +122,18 @@ paths:
         '404':
           description: Contact id does not exist.
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
+        permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
     Envelope:
       type: object
       properties:
         data:
-          description: Payload — object or array, shape depends on the endpoint.
+          description: 'Payload: object or array, shape depends on the endpoint.'
         pagination:
           type: object
           description: Present only on paged list endpoints.
@@ -159,8 +172,3 @@ components:
             timestamp:
               type: string
               format: date-time
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.

@@ -1,7 +1,7 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
-docs: https://github.com/inflectionio/mintlify-docs/tree/develop/api-reference
+source: https://docs.inflection.io/api-reference/introduction
+docs: https://docs.inflection.io/api-reference/introduction
 summary: >-
   Cross-cutting request/response semantics for the Inflection Developer API — a JSON-over-HTTPS
   REST API under https://api.inflection.io/v1, authenticated with scoped Personal Access Tokens,
@@ -9,8 +9,12 @@ summary: >-
 authentication:
   style: bearer-token
   header: Authorization
-  format: Bearer inf_pat_...
-  scopes: [READ, WRITE]
+  format: Bearer <inf_pat_... | OAuth 2.1 access token>
+  credential_types: [personal-access-token, oauth2-access-token]
+  pat_permissions: [READ, WRITE]
+  oauth_scopes: [inflection_app]
+  oauth_model: OAuth 2.1 + PKCE (S256); the token acts as the authorizing user, so authorization is by role
+  note: PATs do not work against the MCP server; MCP requires a connected app's OAuth flow.
   see: authentication/inflectionio-authentication.yml
 idempotency:
   supported: false
@@ -47,5 +51,32 @@ errors:
   format: custom (not RFC 9457 problem+json)
   see: errors/inflectionio-problem-types.yml
 rate_limiting:
+  documented: true
+  limit: 1000 requests/second per workspace, shared by every credential (PATs and OAuth apps)
+  usage_caps: none — no monthly quotas or total-call caps on the Developer API
+  exhaustion_status: 429
+  response_headers:
+    documented: false
+    note: >-
+      No X-RateLimit-*, RateLimit-* or Retry-After headers are published. The only runtime signal is
+      the 429 itself, so back-off must be time-based (exponential with jitter, per the docs).
+  see: rate-limits/inflectionio-rate-limits.yml
+partial_success:
+  note: >-
+    Two documented operations return HTTP 200 while carrying an error signal — addListMembers reports
+    skipped ids in errors[] as CONTACTS_NOT_FOUND, and getContactTransaction returns status NOT_EXIST
+    for an unknown id. Read the body, not just the status.
+  see: errors/inflectionio-problem-types.yml
+not_found_semantics:
+  note: >-
+    Not-found is inconsistent by resource: a missing contact is 400 BAS-E-002, a missing list or email
+    is 404 NOT_FOUND. A mistyped path under /v1 is 401, not 404 (deny-by-default gateway).
+field_case:
+  contacts: snake_case under properties — camelCase keys are silently ignored and saved as null
+  list_members: camelCase (firstName, companyName, phoneNumber) for the same person
+  note: The two resources disagree on field case for identical attributes; map explicitly per endpoint.
+request_tracing:
   documented: false
-  note: No rate-limit policy or response headers are documented in the public API reference.
+agent_surface:
+  mcp: https://mcp.inflection.io/ (OAuth 2.1 only)
+  see: mcp/inflectionio-mcp.yml

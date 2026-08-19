@@ -1,0 +1,529 @@
+{
+  "item": [
+    {
+      "id": "9a48e7aa-90bb-4aeb-af62-a199aa7c2096",
+      "name": "Contact Activity",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f8cabd15-9a07-44ef-a12b-d23f96389186",
+          "name": "Get product activity",
+          "request": {
+            "name": "Get product activity",
+            "description": {
+              "content": "A paged list of in-app product events (page views, clicks, custom events). Empty for a contact with no activity.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id",
+                "product-activity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page_number",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_time",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_time",
+                  "value": "<dateTime>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "79f9f88d-3f9c-434c-bc79-6b16a2f5688a",
+              "name": "Paged product activity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id",
+                    "product-activity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page_number",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "start_time",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_time",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"2016-07-15T23:19:22.212Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "89d867f9-443b-4932-81a9-385079ec2e79",
+          "name": "Get marketing activity",
+          "request": {
+            "name": "Get marketing activity",
+            "description": {
+              "content": "A paged list of marketing touches for the contact — email sends, opens, clicks, and journey activity.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id",
+                "marketing-activity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cf9d00cb-35ba-4fa0-a7f7-11eddcbb9676",
+              "name": "Marketing activity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id",
+                    "marketing-activity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"2016-07-15T23:19:22.212Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "daf527da-34bc-412e-869a-d2065c857340",
+          "name": "Get activity log",
+          "request": {
+            "name": "Get activity log",
+            "description": {
+              "content": "A combined, paged log of the contact's product and marketing activity in one stream.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id",
+                "activity-log"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "69cf9587-60eb-49c0-b23c-924a1c4762c6",
+              "name": "Combined activity log.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id",
+                    "activity-log"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"2016-07-15T23:19:22.212Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b8081c80-7785-4d67-a453-935bbc62b1db",
+          "name": "Get Salesforce record",
+          "request": {
+            "name": "Get Salesforce record",
+            "description": {
+              "content": "Returns the contact's mapped Salesforce record as a free-form object. If the contact exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns `404`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id",
+                "salesforce"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8f0e4e0f-f55f-400c-a089-0264c3bb8d1d",
+              "name": "Salesforce record, or no data if unmapped.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id",
+                    "salesforce"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {},\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"2016-07-15T23:19:22.212Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c4f1a41-b691-4fd2-9a83-34a45f382f18",
+              "name": "Contact id does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id",
+                    "salesforce"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.inflection.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3712a4b6-b402-432a-92bd-6214fa8ff5a2",
+    "name": "Inflection Developer Contact Activity API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.",
+      "type": "text/plain"
+    }
+  }
+}

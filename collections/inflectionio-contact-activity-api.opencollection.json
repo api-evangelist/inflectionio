@@ -1,0 +1,116 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Inflection Developer Contact Activity API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contact Activity",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get product activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/:id/product-activity",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "A paged list of in-app product events (page views, clicks, custom events). Empty for a contact with no activity."
+        },
+        {
+          "info": {
+            "name": "Get marketing activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/:id/marketing-activity",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "A paged list of marketing touches for the contact — email sends, opens, clicks, and journey activity."
+        },
+        {
+          "info": {
+            "name": "Get activity log",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/:id/activity-log",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "A combined, paged log of the contact's product and marketing activity in one stream."
+        },
+        {
+          "info": {
+            "name": "Get Salesforce record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/:id/salesforce",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the contact's mapped Salesforce record as a free-form object. If the contact exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns `404`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

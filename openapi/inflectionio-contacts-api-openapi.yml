@@ -1,8 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Inflection Developer Contact Activity Contacts API
+  title: Inflection Developer API — Contacts
   version: '1.0'
-  description: A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
+    product and marketing activity, static lists, and emails.'
 servers:
 - url: https://api.inflection.io
   description: Production
@@ -17,7 +18,8 @@ paths:
       summary: Get contact by ID
       tags:
       - Contacts
-      description: Returns the full stored record under `data.properties` (snake_case keys). A missing contact returns `400 BAS-E-002` (not the more conventional `404`).
+      description: Returns the full stored record under `data.properties` (snake_case keys). A missing
+        contact returns `400 BAS-E-002` (not the more conventional `404`).
       parameters:
       - name: id
         in: path
@@ -43,7 +45,9 @@ paths:
       summary: Update a contact
       tags:
       - Contacts
-      description: Enqueues an update (PENDING transaction), applied asynchronously.
+      description: 'Updates an existing contact. The write is processed asynchronously: the call returns
+        a transaction with status `PENDING`, which you can poll to confirm the result (see [Asynchronous
+        writes](/api-reference/async-writes)).'
       parameters:
       - name: id
         in: path
@@ -77,7 +81,8 @@ paths:
       summary: Get contact by email
       tags:
       - Contacts
-      description: Returns the full stored record under `data.properties` (snake_case keys). URL-encode the email (`@` → `%40`). A missing contact returns `400 BAS-E-002`.
+      description: Returns the full stored record under `data.properties` (snake_case keys). URL-encode
+        the email (`@` → `%40`). A missing contact returns `400 BAS-E-002`.
       parameters:
       - name: email
         in: path
@@ -105,10 +110,13 @@ paths:
       summary: Create a contact
       tags:
       - Contacts
-      description: 'Enqueues a new contact and returns a PENDING transaction. Keys inside `properties` must be **snake_case**.
+      description: 'Creates a new contact. The write is processed asynchronously: the call returns a transaction
+        with status `PENDING`, which you can poll to confirm the result (see [Asynchronous writes](/api-reference/async-writes)).
+        Property names inside `properties` must be **snake_case** (for example, `first_name`).
 
 
-        `POST` is **create-only**. Re-posting an existing email resolves to `FAILED` in the transaction result. To create-or-update, use **Batch upsert contacts** instead.'
+        `POST` is **create-only**. Re-posting an existing email resolves to `FAILED` in the transaction
+        result. To create-or-update, use **Batch upsert contacts** instead.'
       requestBody:
         required: true
         content:
@@ -146,7 +154,9 @@ paths:
       summary: Batch upsert contacts
       tags:
       - Contacts
-      description: Upserts up to 1,000 contacts in one transaction — new emails come back `CREATED`, existing ones `UPDATED`. This is the reliable create-or-update path for both new and existing contacts (single `POST` is create-only).
+      description: Upserts up to 1,000 contacts in one transaction. New emails come back `CREATED`, existing
+        ones `UPDATED`. This is the reliable create-or-update path for both new and existing contacts
+        (single `POST` is create-only).
       requestBody:
         required: true
         content:
@@ -190,7 +200,8 @@ paths:
       summary: Get a transaction
       tags:
       - Contacts
-      description: Returns `PENDING`, `DONE` (with per-contact `results`), or `NOT_EXIST` for an unknown id (still HTTP `200`). See [Asynchronous writes](/api-reference/async-writes).
+      description: Returns `PENDING`, `DONE` (with per-contact `results`), or `NOT_EXIST` for an unknown
+        id (still HTTP `200`). See [Asynchronous writes](/api-reference/async-writes).
       parameters:
       - name: transactionId
         in: path
@@ -210,37 +221,13 @@ paths:
                     data:
                       $ref: '#/components/schemas/Transaction'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
+        permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
-    Transaction:
-      type: object
-      properties:
-        transactionId:
-          type: string
-          example: 34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d
-        status:
-          type: string
-          enum:
-          - PENDING
-          - DONE
-          - NOT_EXIST
-        data:
-          type: object
-          description: Present when status is DONE.
-          properties:
-            results:
-              type: array
-              items:
-                type: object
-                properties:
-                  email:
-                    type: string
-                  status:
-                    type: string
-                    enum:
-                    - CREATED
-                    - UPDATED
-                    - NO_CHANGE
-                    - FAILED
     Contact:
       type: object
       properties:
@@ -252,11 +239,25 @@ components:
           format: email
         properties:
           $ref: '#/components/schemas/ContactProperties'
+    ContactProperties:
+      type: object
+      description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        _source:
+          type: string
+          description: Set by Inflection to identify the write source.
+      additionalProperties: true
     Envelope:
       type: object
       properties:
         data:
-          description: Payload — object or array, shape depends on the endpoint.
+          description: 'Payload: object or array, shape depends on the endpoint.'
         pagination:
           type: object
           description: Present only on paged list endpoints.
@@ -295,22 +296,33 @@ components:
             timestamp:
               type: string
               format: date-time
-    ContactProperties:
+    Transaction:
       type: object
-      description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
       properties:
-        first_name:
+        transactionId:
           type: string
-        last_name:
+          example: 34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d
+        status:
           type: string
-        company_name:
-          type: string
-        _source:
-          type: string
-          description: Set by Inflection to identify the write source.
-      additionalProperties: true
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.
+          enum:
+          - PENDING
+          - DONE
+          - NOT_EXIST
+        data:
+          type: object
+          description: Present when status is DONE.
+          properties:
+            results:
+              type: array
+              items:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - CREATED
+                    - UPDATED
+                    - NO_CHANGE
+                    - FAILED

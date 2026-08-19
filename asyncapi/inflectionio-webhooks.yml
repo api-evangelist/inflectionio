@@ -1,0 +1,66 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.inflection.io/connections/outbound-webhooks
+spec_type: none
+asyncapi:
+  published: false
+  note: >-
+    No AsyncAPI document is published. Probed https://docs.inflection.io/asyncapi.yaml,
+    https://api.inflection.io/asyncapi.yaml and the GitHub org (github.com/inflectionio has zero public
+    repos) — nothing. The event surface is documented in prose only.
+summary: >-
+  Inflection has a real bidirectional event surface, but it is user-configured rather than a fixed,
+  versioned event catalog. Outbound webhooks are a journey flow step: the user defines the method, URL,
+  headers and body template, so the payload schema is authored per webhook, not published by Inflection.
+  Inbound webhooks are the mirror — Inflection mints a per-connection receiving URL that any third party
+  can POST JSON to, and the received fields are mapped onto contact properties. Journey lifecycle events
+  are additionally streamed to the data warehouse and to Segment. There is no signed-webhook contract,
+  no retry/delivery-guarantee documentation, and no subscription API.
+webhooks:
+  outbound:
+    direction: inflection-to-you
+    docs: https://docs.inflection.io/connections/outbound-webhooks
+    trigger: '"Run outbound webhook" flow step inside a journey'
+    methods: [GET, POST, PUT, PATCH, DELETE, HEAD]
+    content_types: [application/json, text/plain, application/xml]
+    payload: >-
+      Fully user-authored. The body is a template with a variable picker over contact fields, e.g.
+      {"email": "{{ column(\"email\") }}", "firstname": "{{ column(\"first_name\") }}"}.
+    auth_to_destination: custom request headers, e.g. an Authorization bearer header
+    response_mapping: supported — responses can be mapped back onto contact fields (shipped March 2026)
+    import: cURL commands can be pasted to auto-populate method, URL, headers and body
+    signing:
+      documented: false
+      note: No webhook signature, timestamp or replay-protection scheme is documented.
+    delivery_guarantees:
+      documented: false
+    mmc_impact: A journey containing a "Run outbound webhook" flow step is MMC-qualifying (billable).
+  inbound:
+    direction: you-to-inflection
+    docs: https://docs.inflection.io/connections/inbound-webhooks
+    format: JSON
+    url: per-connection generated receiving URL
+    auth_methods: [No Auth, Basic Auth, API Key]
+    auth_recommendation: Basic Auth or API Key strongly recommended; No Auth exposes the endpoint to spam.
+    effects:
+    - Update contact properties from mapped submission fields.
+    - Optionally create a new contact when an unseen email address arrives.
+    - Filter audiences inside journeys; enroll contacts into Trigger Journeys in real time.
+    named_providers: [Zoom, Zapier, LinkedIn, Goldcast, Clearbit, Clay, Marketo, HubSpot]
+    throughput_recommendation: 1,000 requests/minute per connection (soft; raise via customer success)
+  forms:
+    docs: https://docs.inflection.io/connections/custom-forms
+    note: >-
+      Custom Forms is the same inbound mechanism marketed as a forms API — any tool that can POST JSON
+      to a webhook URL can submit. Auth options are No Auth, Basic Auth or an auto-generated API Key
+      presented as `Authorization: Bearer <key>`; the key can be rotated with "Refresh API Key".
+      Documented integrations include Webflow (API V1 only) and Formstack.
+event_streams:
+  - destination: Data warehouse (BigQuery, Snowflake, Redshift, Databricks)
+    docs: https://docs.inflection.io/connections/export-to-data-warehouse
+    events: [email events, form submissions, webhook events, journey entry/completion/exit]
+    note: Journey lifecycle events added July 2026.
+  - destination: Segment
+    docs: https://docs.inflection.io/connections/segment
+    events: [marketing activities, email events, form submissions, webhook events, journey entry/completion/exit]
+event_catalog_published: false

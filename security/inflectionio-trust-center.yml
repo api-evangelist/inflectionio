@@ -1,0 +1,64 @@
+generated: '2026-08-13'
+method: searched
+probe: true
+url: https://docs.inflection.io/agents/mcp-trust-security
+source: https://docs.inflection.io/agents/mcp-trust-security
+summary: >-
+  Inflection has no trust-center subdomain — trust.inflection.io does not resolve and
+  www.inflection.io/security is a 404. What it does publish is a scoped, unusually specific
+  Trust & Security page inside the developer docs, covering the MCP service: deployment model,
+  encryption, OAuth 2.1 posture, tenant isolation, data retention, named subprocessors, a reasoned
+  CORS justification, and a compliance section with named certifications. It is a real published
+  compliance posture, but it is written about the MCP endpoint rather than the platform as a whole,
+  and every artifact behind it (SOC 2 report, pen-test summary, DPA) is NDA/request-gated.
+certifications:
+- name: SOC 2
+  type: Type II
+  status: attested
+  year: 2026
+  evidence_availability: report available under NDA on request from support@inflection.io
+- name: GDPR
+  status: DPA available on request
+  evidence_availability: Data Processing Addendum on request from support@inflection.io
+- name: CCPA
+  status: compliant
+  evidence_availability: data subject rights honored per the published Privacy Policy
+- name: Penetration test
+  status: independent third-party test conducted 2026
+  evidence_availability: summary available under NDA on request
+out_of_scope:
+- {name: PCI DSS, note: Not in scope — Inflection does not process payment card data.}
+- {name: HIPAA, note: Not in scope — Inflection does not process protected health information.}
+posture:
+  deployment: multi-tenant SaaS, single global region
+  cloud: Amazon Web Services, US region
+  encryption_in_transit: TLS 1.2 minimum, HSTS enabled
+  encryption_at_rest: AES-256 via AWS KMS
+  authentication: OAuth 2.1 with PKCE, S256 only (plain rejected)
+  token_lifetime: 15-minute access tokens; refresh-token rotation with reuse detection
+  per_call_verification: every MCP tool call re-verifies the bearer token with the authorization server
+  tenant_isolation: every MCP tool call scoped to the caller's tenant id; cross-tenant reads not possible
+  token_handling: verified tokens cached in memory for their lifetime; raw tokens not logged or persisted
+  cors: wildcard Access-Control-Allow-Origin with Access-Control-Allow-Credentials false, documented and justified
+retention:
+  assets_days: 30
+  agent_outputs_days: 7
+  intermediate_results_hours: 24
+  tracing: LangSmith traces include user_email, tenant_id, session_id and user-agent; retention follows LangSmith defaults
+subprocessors:
+- {name: Amazon Web Services, purpose: infrastructure (compute, storage, network, managed database), data: all tenant data at rest and in transit}
+- {name: OpenAI, purpose: LLM inference for AI agents, data: prompts and conversation context}
+- {name: LangSmith, purpose: agent trace observability, data: user email, tenant id, prompts, tool calls}
+data_subject_rights:
+  url: https://docs.inflection.io/settings/data-subject-erasure-requests
+  note: Self-serve Data Subject Erasure Requests (DSRs) for GDPR/CCPA deletion requests.
+privacy_policy: https://www.inflection.io/legal/privacy-policy
+terms: https://www.inflection.io/legal/terms
+evidence:
+- source: https://docs.inflection.io/agents/mcp-trust-security
+  http_status: 200
+  keywords: [soc 2 type ii, gdpr, ccpa, penetration test, encryption, tenant isolation, subprocessors]
+- {source: 'https://trust.inflection.io', http_status: 0, note: does not resolve}
+- {source: 'https://www.inflection.io/security', http_status: 404}
+page_changelog:
+- {date: '2026-06-02', change: Initial publication.}

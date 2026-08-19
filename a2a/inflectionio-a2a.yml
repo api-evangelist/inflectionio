@@ -1,0 +1,60 @@
+generated: '2026-08-13'
+method: probed
+source: https://docs.inflection.io/.well-known/agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: docs.inflection.io
+  note: >-
+    Served from the Inflection Help Center (docs.inflection.io), the provider's own documentation host.
+    The marketing host (www.inflection.io), the API gateway (api.inflection.io) and the MCP host
+    (mcp.inflection.io) all return 404 on both /.well-known/agent-card.json and /.well-known/agent.json;
+    app.inflection.io returns 200 with an SPA HTML shell on every /.well-known/* path and was rejected
+    as a catch-all false positive.
+conformance:
+  spec: A2A 1.0.0
+  grade: flavored
+  protocol_version: '0.3'
+  preferred_transport: HTTP+JSON
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  deviations:
+  - supportedInterfaces-instead-of-additionalInterfaces
+  - protocolVersion-0.3-predates-1.0
+  note: >-
+    Passes all three hard structural checks (capabilities is an object, protocolVersion is present,
+    skills is an array) but declares its transport list under `supportedInterfaces` rather than the
+    A2A 1.0.0 `additionalInterfaces` key, and pins protocolVersion 0.3. Graded flavored on the
+    interface-key deviation.
+card:
+  name: Inflection Help Center
+  url: https://docs.inflection.io/
+  version: 1.0.0
+  protocol_version: '0.3'
+  provider: Inflection Help Center
+  documentation_url: https://docs.inflection.io/
+  capabilities:
+    streaming: false
+    pushNotifications: false
+  default_input_modes: [text/plain]
+  default_output_modes: [text/plain]
+  skills: 1
+  skill_ids:
+  - id: inflection
+    name: Inflection
+    url: https://docs.inflection.io/.well-known/agent-skills/inflection/skill.md
+  file: inflectionio-agent-card.json
+x-evidence:
+  fetched: '2026-08-13'
+  url: https://docs.inflection.io/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  rejected:
+  - {url: 'https://www.inflection.io/.well-known/agent-card.json', http_status: 404}
+  - {url: 'https://www.inflection.io/.well-known/agent.json', http_status: 404}
+  - {url: 'https://api.inflection.io/.well-known/agent-card.json', http_status: 404}
+  - {url: 'https://mcp.inflection.io/.well-known/agent-card.json', http_status: 404}
+  - {url: 'https://docs.inflection.io/.well-known/agent.json', http_status: 404}
+  - {url: 'https://app.inflection.io/.well-known/agent-card.json', http_status: 200, reason: HTML SPA catch-all, not a JSON AgentCard}

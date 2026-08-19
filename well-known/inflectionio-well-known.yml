@@ -1,17 +1,69 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
+source: live /.well-known probes of every Inflection host
+note: >-
+  The marketing host and the API gateway publish nothing under /.well-known. The real discovery surface
+  is the agent/MCP estate: mcp.inflection.io serves RFC 9728 protected-resource metadata and
+  auth-v2.inflection.io serves RFC 8414 authorization-server metadata, both anonymously; docs.inflection.io
+  serves an A2A agent card. app.inflection.io answers 200 with an SPA HTML shell on EVERY /.well-known
+  path — those are catch-all false positives, not documents, and are recorded as misses.
 hosts:
 - host: https://www.inflection.io
   documents:
   - {path: /.well-known/security.txt, status: 404}
   - {path: /.well-known/openid-configuration, status: 404}
   - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
   - {path: /.well-known/api-catalog, status: 404}
   - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
 - host: https://api.inflection.io
   documents:
-  - {path: /.well-known/security.txt, status: 401}
-notes: >-
-  No /.well-known discovery documents are published on the marketing host. The API gateway
-  (api.inflection.io) denies-by-default with 401 on unknown paths, so /.well-known probes there
-  return 401 rather than a document.
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: https://mcp.inflection.io
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: inflectionio-oauth-protected-resource.json
+    kind: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+- host: https://auth-v2.inflection.io
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: inflectionio-oauth-authorization-server.json
+    kind: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  - {path: /.well-known/openid-configuration, status: 200, document: false, note: 'returns the HTML sign-in page, not an OIDC discovery document — recorded as a miss'}
+- host: https://docs.inflection.io
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/inflectionio-agent-card.json
+    kind: A2A Agent Card (see a2a/inflectionio-a2a.yml)
+  - path: /.well-known/agent-skills/inflection/skill.md
+    status: 200
+    file: ../skills/inflectionio-provider-published-skill.md
+    kind: Provider-published Agent Skill
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+- host: https://app.inflection.io
+  documents:
+  - {path: /.well-known/security.txt, status: 200, document: false, note: SPA HTML catch-all — every /.well-known path returns the app shell; treated as a miss}
+  - {path: /.well-known/agent-card.json, status: 200, document: false, note: SPA HTML catch-all — treated as a miss}
+  - {path: /.well-known/openid-configuration, status: 200, document: false, note: SPA HTML catch-all — treated as a miss}
+security_txt:
+  published: false
+  note: >-
+    No RFC 9116 security.txt on any host. A security-disclosure address IS published, but in prose on
+    the MCP trust & security page — see security/inflectionio-vulnerability-disclosure.yml.

@@ -1,0 +1,40 @@
+generated: '2026-08-13'
+method: searched
+source: registry searches across npm, PyPI, RubyGems, crates.io, NuGet, Maven Central, pkg.go.dev + the Inflection developer docs
+package_count: 0
+official_package_count: 0
+packages: []
+summary: >-
+  Inflection publishes no first-party client libraries in any language. The Developer API docs teach
+  raw HTTP with curl and never reference an SDK; the GitHub organization github.com/inflectionio exists
+  but has zero public repositories (the mintlify-docs repo the earlier round linked is now private or
+  deleted and returns 404). The provider's own agent skill likewise documents raw endpoints, not a
+  package. Integration is expected to happen through the MCP server, through automation platforms
+  (n8n, Zapier, Make) using the OAuth 2.1 connected app, or through direct HTTP.
+searched:
+- {registry: npm, query: 'inflection.io / inflection-io / @inflectionio/* / inflection-sdk', result: none first-party}
+- {registry: pypi, query: 'inflection-io / inflectionio / inflection-sdk', result: 404}
+- {registry: rubygems, query: inflection*, result: none first-party}
+- {registry: crates.io, query: inflection*, result: none first-party}
+- {registry: nuget, query: inflection*, result: none first-party}
+- {registry: maven-central, query: inflection*, result: none first-party}
+- {registry: pkg.go.dev, query: inflection*, result: none first-party}
+- {source: 'https://github.com/inflectionio', result: '200, zero public repositories'}
+- {source: 'https://docs.inflection.io/api-reference/quickstart', result: 'curl only, no SDK referenced'}
+namespace_collisions:
+  note: >-
+    Searching these registries for "inflection" returns unrelated packages that must NOT be credited to
+    this provider. Recorded here so a later round does not re-adopt them.
+  rejected:
+  - name: '@inflection/sdk'
+    registry: npm
+    url: https://www.npmjs.com/package/@inflection/sdk
+    version: 0.1.1
+    published: '2026-08-10'
+    reason: >-
+      Different company. Describes itself as an embeddable support/onboarding agent widget; homepage
+      https://inflection.network, repository github.com/inflection-3/soma, maintainer
+      tech@levitatelabs.xyz. Nothing ties it to Inflection.io's B2B marketing automation platform.
+  - name: inflection
+    registry: rubygems/pypi
+    reason: Generic English-inflection (singular/plural) string libraries; unrelated to this company.

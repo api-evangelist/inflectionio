@@ -1,0 +1,170 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Inflection Developer Contact Activity Lists and Members API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Lists and Members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.inflection.io/v1/lists",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Takes a `name` (and optional `folder`); a duplicate name returns `400 LIST_ALREADY_EXISTS`."
+        },
+        {
+          "info": {
+            "name": "Get a list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/lists/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Missing list returns `404 NOT_FOUND`."
+        },
+        {
+          "info": {
+            "name": "Update a list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.inflection.io/v1/lists/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns only `{ \"staticListId\", \"success\": true }` — a confirmation flag, not the updated list object. Re-fetch the list if you need its new state."
+        },
+        {
+          "info": {
+            "name": "Delete a list",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.inflection.io/v1/lists/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Soft delete — returns `200` with a result body."
+        },
+        {
+          "info": {
+            "name": "Get list members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/lists/:id/members",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Member records use **camelCase** field names (`firstName`, `companyName`, `phoneNumber`) — unlike the snake_case that contact lookups return for the same person."
+        },
+        {
+          "info": {
+            "name": "Add list members",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.inflection.io/v1/lists/:id/members",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add members by contact id. Unknown ids are skipped and reported in `errors` with a still-successful `200` (partial success); the response reports how many were `added`."
+        },
+        {
+          "info": {
+            "name": "Remove a list member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.inflection.io/v1/lists/:id/members/:contactId",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Remove a list member"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

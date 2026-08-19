@@ -1,0 +1,761 @@
+{
+  "item": [
+    {
+      "id": "867199bb-d173-4046-98a5-9ca53b05b4c5",
+      "name": "Contacts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "36614a1d-c364-44ba-a1a7-75a2d48210f5",
+          "name": "Get contact by ID",
+          "request": {
+            "name": "Get contact by ID",
+            "description": {
+              "content": "Returns the full stored record under `data.properties` (snake_case keys). A missing contact returns `400 BAS-E-002` (not the more conventional `404`).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "32a3ba6b-66d0-4f0c-8130-60740a6c633e",
+              "name": "Contact found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0001760c4a86bc38a4a60bcceae32540\",\n    \"email\": \"cemdqvbMkRtMiHG@WiXThlElI.nv\",\n    \"properties\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company_name\": \"string\",\n      \"_source\": \"string\"\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"SUCCESS\",\n    \"timestamp\": \"1984-01-01T23:47:52.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92fb4a1f-0e2a-4ede-bb4d-8071560895c4",
+              "name": "Contact not found (`BAS-E-002`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0a38b1b3-993c-4cb1-9155-fa4a62700122",
+          "name": "Update a contact",
+          "request": {
+            "name": "Update a contact",
+            "description": {
+              "content": "Enqueues an update (PENDING transaction), applied asynchronously.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"properties\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"company_name\": \"<string>\",\n    \"_source\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "526e56d8-ca45-4565-871f-bf3afbeec2b3",
+              "name": "Update enqueued as a PENDING transaction.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"properties\": {\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"company_name\": \"string\",\n    \"_source\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"transactionId\": \"34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d\",\n    \"status\": \"DONE\",\n    \"data\": {\n      \"results\": [\n        {\n          \"email\": \"string\",\n          \"status\": \"FAILED\"\n        },\n        {\n          \"email\": \"string\",\n          \"status\": \"CREATED\"\n        }\n      ]\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1971-11-21T05:00:23.895Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0e15eecf-f2b0-4cbb-ad20-1d7a963f7a28",
+          "name": "Get contact by email",
+          "request": {
+            "name": "Get contact by email",
+            "description": {
+              "content": "Returns the full stored record under `data.properties` (snake_case keys). URL-encode the email (`@` → `%40`). A missing contact returns `400 BAS-E-002`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                "by-email",
+                ":email"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "email",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e8341f2b-6e83-41fd-acf5-8f76ea5601bb",
+              "name": "Contact found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "by-email",
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "email",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"0001760c4a86bc38a4a60bcceae32540\",\n    \"email\": \"cemdqvbMkRtMiHG@WiXThlElI.nv\",\n    \"properties\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company_name\": \"string\",\n      \"_source\": \"string\"\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"SUCCESS\",\n    \"timestamp\": \"1984-01-01T23:47:52.267Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d37d5ebe-bc36-41a5-a76e-587c200b27f0",
+              "name": "Contact not found (`BAS-E-002`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "by-email",
+                    ":email"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "email",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "277a63a8-a2bf-405a-a043-ac9c65a5724b",
+          "name": "Create a contact",
+          "request": {
+            "name": "Create a contact",
+            "description": {
+              "content": "Enqueues a new contact and returns a PENDING transaction. Keys inside `properties` must be **snake_case**.\n\n`POST` is **create-only**. Re-posting an existing email resolves to `FAILED` in the transaction result. To create-or-update, use **Batch upsert contacts** instead.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<email>\",\n  \"properties\": {\n    \"first_name\": \"<string>\",\n    \"last_name\": \"<string>\",\n    \"company_name\": \"<string>\",\n    \"_source\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5bac2cfb-b3a2-482f-8369-46024a67c1d9",
+              "name": "Create enqueued as a PENDING transaction.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"jane@acme.com\",\n  \"properties\": {\n    \"first_name\": \"Jane\",\n    \"company_name\": \"Acme\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"transactionId\": \"34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d\",\n    \"status\": \"DONE\",\n    \"data\": {\n      \"results\": [\n        {\n          \"email\": \"string\",\n          \"status\": \"FAILED\"\n        },\n        {\n          \"email\": \"string\",\n          \"status\": \"CREATED\"\n        }\n      ]\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1971-11-21T05:00:23.895Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3ff3b909-5532-4949-a48a-c54c7eccbe65",
+          "name": "Batch upsert contacts",
+          "request": {
+            "name": "Batch upsert contacts",
+            "description": {
+              "content": "Upserts up to 1,000 contacts in one transaction — new emails come back `CREATED`, existing ones `UPDATED`. This is the reliable create-or-update path for both new and existing contacts (single `POST` is create-only).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                "batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contacts\": [\n    {\n      \"email\": \"<email>\",\n      \"properties\": {\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"company_name\": \"<string>\",\n        \"_source\": \"<string>\",\n        \"key_0\": true,\n        \"key_1\": 5327.202676898425,\n        \"key_2\": true,\n        \"key_3\": 9430.947009850022,\n        \"key_4\": false\n      }\n    },\n    {\n      \"email\": \"<email>\",\n      \"properties\": {\n        \"first_name\": \"<string>\",\n        \"last_name\": \"<string>\",\n        \"company_name\": \"<string>\",\n        \"_source\": \"<string>\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "336d4cb9-1278-4474-a7fd-e420ca4ad9ae",
+              "name": "Batch enqueued as a PENDING transaction.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contacts\": [\n    {\n      \"email\": \"jane@acme.com\",\n      \"properties\": {\n        \"first_name\": \"Jane\"\n      }\n    },\n    {\n      \"email\": \"raj@globex.com\",\n      \"properties\": {\n        \"company_name\": \"Globex\"\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"transactionId\": \"34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d\",\n    \"status\": \"DONE\",\n    \"data\": {\n      \"results\": [\n        {\n          \"email\": \"string\",\n          \"status\": \"FAILED\"\n        },\n        {\n          \"email\": \"string\",\n          \"status\": \"CREATED\"\n        }\n      ]\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1971-11-21T05:00:23.895Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0de595b7-bae0-4ea6-9cda-cac59319c040",
+          "name": "Get a transaction",
+          "request": {
+            "name": "Get a transaction",
+            "description": {
+              "content": "Returns `PENDING`, `DONE` (with per-contact `results`), or `NOT_EXIST` for an unknown id (still HTTP `200`). See [Asynchronous writes](/api-reference/async-writes).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                "transactions",
+                ":transactionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "transactionId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ab90109f-10d4-4505-931e-7fcfe108dd20",
+              "name": "Transaction status.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "transactions",
+                    ":transactionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "transactionId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"transactionId\": \"34-7e8009a7-2c91-409e-b5ac-0f1144a0cc7d\",\n    \"status\": \"DONE\",\n    \"data\": {\n      \"results\": [\n        {\n          \"email\": \"string\",\n          \"status\": \"FAILED\"\n        },\n        {\n          \"email\": \"string\",\n          \"status\": \"CREATED\"\n        }\n      ]\n    }\n  },\n  \"pagination\": {\n    \"pageNumber\": 1,\n    \"pageSize\": 20,\n    \"totalElements\": 151,\n    \"totalPages\": 8\n  },\n  \"errors\": [\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    },\n    {\n      \"errorCode\": \"string\",\n      \"message\": \"string\",\n      \"detail\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"status\": \"FAILURE\",\n    \"timestamp\": \"1971-11-21T05:00:23.895Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.inflection.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "997ae9e7-2689-4092-9990-8f3da95723ca",
+    "name": "Inflection Developer Contact Activity Contacts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.",
+      "type": "text/plain"
+    }
+  }
+}

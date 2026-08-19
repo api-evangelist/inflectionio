@@ -1,0 +1,96 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.inflection.io/pricing
+docs:
+- https://www.inflection.io/pricing
+- https://docs.inflection.io/getting-started/mmcs
+plan_count: 1
+summary: >-
+  Inflection sells a single plan, metered on Monthly Marketed Contacts (MMCs) rather than on database
+  size, seats, data volume or API calls. The pricing page publishes an interactive MMC price ladder,
+  so the money is genuinely public up to the custom threshold; above 500,000 MMCs the slider switches
+  to "Custom Pricing" and routes to sales. Every deal requires an annual commitment and the entry point
+  is stated as $36K/year. The Developer API and the MCP server are included — neither is separately
+  priced or metered.
+metering:
+  unit: MMC (Monthly Marketed Contact)
+  definition: >-
+    A unique contact (unique by email address) who routes through one or more Inflection journeys in a
+    calendar month. Counted once per month per contact even if they trigger a journey repeatedly.
+  not_metered: [contact database volume, marketable contacts, seats, data volume, API calls, Salesforce API calls]
+  free_allowance: >-
+    Non-personalized batch journeys (newsletters, announcements, legal notifications) do not count
+    against the MMC cap, up to a ceiling of 10x the contracted MMC number.
+  qualifying_criteria_docs: https://docs.inflection.io/getting-started/mmcs
+plans:
+- name: Inflection
+  slug: inflection
+  price_from: 36000
+  currency: USD
+  billing_period: annual
+  commitment: annual
+  entry_point: '$36K/year (equivalently $3,000/month at the 25,000-MMC floor)'
+  contact_sales: https://www.inflection.io/pricing
+  included:
+  - Unlimited contact database
+  - Unlimited product data
+  - Unlimited Salesforce API calls
+  - Free unpersonalized batch sends to 10x MMCs
+  - Agentic marketing
+  - Marketing automation
+  - Salesforce sync (two way)
+  - Data warehouse sync (two way)
+  - Customer communications
+  - Full funnel lifecycle marketing
+  - AI-generated emails
+  - AI-generated journeys
+  - AI marketing analysis
+  - AI marketing QA
+  - AI features at no extra cost
+  - Unlimited integrations
+  - Create campaigns from Slack
+  - SSO
+  - Dedicated CSM
+  - Premium support
+  limits:
+    api_calls: unlimited
+    rate_limit: 1000 requests/second/workspace (see rate-limits/inflectionio-rate-limits.yml)
+    mmc: contracted tier
+  price_ladder:
+    unit: USD per month, platform + MMC fees, annual commitment
+    note: >-
+      Read from the published pricing slider on https://www.inflection.io/pricing. Each row is the
+      monthly charge at that MMC floor. At and above the 500,000-MMC custom threshold the page shows
+      "Custom Pricing" rather than a figure, so the rows from 500,000 up are the slider's own published
+      values but are quoted by sales in practice.
+    custom_threshold_mmc: 500000
+    tiers:
+    - {mmc_from: 25000, monthly_usd: 3000}
+    - {mmc_from: 30000, monthly_usd: 3353}
+    - {mmc_from: 35000, monthly_usd: 3706}
+    - {mmc_from: 40000, monthly_usd: 4059}
+    - {mmc_from: 45000, monthly_usd: 4412}
+    - {mmc_from: 50000, monthly_usd: 4765}
+    - {mmc_from: 60000, monthly_usd: 5180}
+    - {mmc_from: 70000, monthly_usd: 5595}
+    - {mmc_from: 80000, monthly_usd: 6010}
+    - {mmc_from: 90000, monthly_usd: 6426}
+    - {mmc_from: 100000, monthly_usd: 6841}
+    - {mmc_from: 150000, monthly_usd: 8225}
+    - {mmc_from: 200000, monthly_usd: 9606}
+    - {mmc_from: 250000, monthly_usd: 10993}
+    - {mmc_from: 300000, monthly_usd: 12377}
+    - {mmc_from: 350000, monthly_usd: 13761}
+    - {mmc_from: 400000, monthly_usd: 15145}
+    - {mmc_from: 450000, monthly_usd: 16529}
+    - {mmc_from: 500000, monthly_usd: 17913}
+    - {mmc_from: 750000, monthly_usd: 22530}
+    - {mmc_from: 1000000, monthly_usd: 27141}
+    - {mmc_from: 2500000, monthly_usd: 54822}
+    - {mmc_from: 5000000, monthly_usd: 85580}
+    - {mmc_from: 10000000, monthly_usd: 147095}
+free_tier:
+  available: false
+trial:
+  available: false
+  note: The pricing page offers "Talk to Sales" and "Book a Demo"; no self-serve trial is published.

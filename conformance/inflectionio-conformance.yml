@@ -1,27 +1,61 @@
-generated: '2026-07-19'
-method: derived
-source: openapi/inflectionio-openapi-original.yml
+generated: '2026-08-13'
+method: searched
+source: openapi/_original/inflectionio-openapi-original.yml + https://docs.inflection.io/agents/mcp-trust-security
 standards:
 - id: openapi-3.1
   conforms: true
-  evidence: OpenAPI 3.1.0 document published at github.com/inflectionio/mintlify-docs/api-reference/openapi.yaml
+  evidence: OpenAPI 3.1.0 document published at https://docs.inflection.io/api-reference/openapi.yaml (20 operations, harvested 2026-08-13)
 - id: http-bearer-auth
   conforms: true
   evidence: securitySchemes.bearerAuth type http scheme bearer (RFC 6750-style bearer token)
 - id: oauth2
-  conforms: false
-  evidence: Authentication is a static Personal Access Token, not an OAuth2 flow.
+  conforms: true
+  evidence: >-
+    OAuth 2.1 authorization-code flow with PKCE for Connected Apps, documented at
+    docs.inflection.io/agents/connected-apps-oauth; authorize/token/revoke/introspect/jwks endpoints
+    live on auth-v2.inflection.io.
+- id: oauth2.1-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported ["S256"] in the RFC 8414 metadata; the trust page states plain is not accepted.
+- id: rfc8414-authorization-server-metadata
+  conforms: true
+  evidence: https://auth-v2.inflection.io/.well-known/oauth-authorization-server returns 200 with a full metadata document (probed 2026-08-13)
+- id: rfc9728-protected-resource-metadata
+  conforms: true
+  evidence: https://mcp.inflection.io/.well-known/oauth-protected-resource returns 200 naming the authorization server and scopes (probed 2026-08-13)
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://auth-v2.inflection.io/client-app/connect/register advertised in RFC 8414 metadata; docs route Claude/ChatGPT clients through DCR.
+- id: mcp
+  conforms: true
+  evidence: Remote MCP server at https://mcp.inflection.io/ (probed 2026-08-13, 401 invalid_token with an OAuth challenge — the endpoint is live and gated).
+- id: a2a
+  conforms: partial
+  evidence: >-
+    An A2A agent card is served at https://docs.inflection.io/.well-known/agent-card.json but declares
+    protocolVersion 0.3 and uses supportedInterfaces rather than the 1.0.0 additionalInterfaces key.
+    Graded flavored — see a2a/inflectionio-a2a.yml.
 - id: oidc
   conforms: false
+  evidence: No OIDC discovery document; auth-v2.inflection.io/.well-known/openid-configuration returns the HTML sign-in page, not metadata.
 - id: rfc9457-problem-details
   conforms: false
-  evidence: Errors use a custom data/errors/meta envelope, not application/problem+json.
+  evidence: Errors use a custom data/errors/meta envelope; nothing is served as application/problem+json.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: No /.well-known/security.txt on any host; the disclosure address is published in docs prose only.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset/Deprecation header support and no deprecation policy documented.
 - id: pagination
   conforms: true
   evidence: 1-based page_number/page_size query params with pageNumber/pageSize/totalElements/totalPages response fields on list endpoints.
 - id: idempotency
   conforms: false
-  evidence: No idempotency-key header or parameter documented; contact writes are async upserts.
+  evidence: No idempotency-key header or parameter documented; contact writes are async upserts deduplicated on email.
+- id: asyncapi
+  conforms: false
+  evidence: Webhooks are user-configured with user-authored payloads; no AsyncAPI document and no published event catalog.
 - id: json-api
   conforms: false
 - id: scim
@@ -32,3 +66,11 @@ standards:
   conforms: false
 - id: odata
   conforms: false
+compliance:
+  published: true
+  url: https://docs.inflection.io/agents/mcp-trust-security
+  certifications: [SOC 2 Type II (2026), GDPR (DPA on request), CCPA]
+  out_of_scope: [PCI DSS, HIPAA]
+  note: >-
+    Named certifications are published on the MCP Trust & Security page; the underlying SOC 2 report and
+    penetration-test summary are NDA-gated. See security/inflectionio-trust-center.yml.

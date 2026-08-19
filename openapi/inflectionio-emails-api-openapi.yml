@@ -1,0 +1,156 @@
+openapi: 3.1.0
+info:
+  title: Inflection Developer API — Emails
+  version: '1.0'
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
+    product and marketing activity, static lists, and emails.'
+servers:
+- url: https://api.inflection.io
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Emails
+paths:
+  /v1/emails:
+    post:
+      operationId: createEmail
+      summary: Create an email
+      tags:
+      - Emails
+      description: "Emails are **create and read** over the API. After creating, you can edit the HTML\
+        \ via the returned `editorUrl`; fetch it back with **Get an email**.\n\n- Only HTML emails can\
+        \ be created via the API: pass the full email\n  body in the `html` field.\n- The from-email domain\
+        \ must be org-approved, otherwise `400\n  UnapprovedEmailDomainException`.\n- HTML tokens are\
+        \ validated; an unknown token returns `400\n  UnknownVariablesException`.\n- A duplicate name\
+        \ returns `409 TEMPLATE_ALREADY_EXISTS`."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - html
+              - subject
+              - fromEmail
+              - replyTo
+              properties:
+                name:
+                  type: string
+                html:
+                  type: string
+                subject:
+                  type: string
+                fromEmail:
+                  type: object
+                  description: The sender, an object with `email` and `name`.
+                  properties:
+                    email:
+                      type: string
+                    name:
+                      type: string
+                replyTo:
+                  type: string
+                preheader:
+                  type: string
+      responses:
+        '200':
+          description: Template created, with an editorUrl to continue in the UI.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        editorUrl:
+                          type: string
+        '400':
+          description: Unapproved domain or unknown token.
+        '409':
+          description: Duplicate template name.
+  /v1/emails/{id}:
+    get:
+      operationId: getEmail
+      summary: Get an email
+      tags:
+      - Emails
+      description: Fetch one created email by id, including its `editorUrl`. A missing email returns **404**
+        (unlike contacts, which report 400).
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The email. Some nested fields are free-form objects.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Envelope'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      description: The email record, including `editorUrl`.
+        '404':
+          description: No email exists with that id.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
+        permission for GET, WRITE for POST/PATCH/DELETE.
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        data:
+          description: 'Payload: object or array, shape depends on the endpoint.'
+        pagination:
+          type: object
+          description: Present only on paged list endpoints.
+          properties:
+            pageNumber:
+              type: integer
+              example: 1
+            pageSize:
+              type: integer
+              example: 20
+            totalElements:
+              type: integer
+              example: 151
+            totalPages:
+              type: integer
+              example: 8
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorCode:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+        meta:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - FAILURE
+            timestamp:
+              type: string
+              format: date-time

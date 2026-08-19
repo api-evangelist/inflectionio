@@ -1,0 +1,111 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.inflection.io/whats-new/july-2026
+docs: https://docs.inflection.io/llms.txt
+url: https://docs.inflection.io/whats-new/july-2026
+note: >-
+  Inflection publishes a dated "What's New" release log in its Help Center, one page per release, mixing
+  monthly platform releases with interstitial AI releases. It is a product changelog, not an API
+  changelog — there is no per-version API diff and the API itself is unversioned beyond the /v1 path.
+  The recent window is captured below; the live pages are the source of truth.
+scheme: dated-release-notes
+api_versioning:
+  scheme: uri-path
+  current: v1
+  note: The Developer API shipped as V1 in the July 2026 release and has had no subsequent version.
+cadence: monthly, with interstitial AI releases
+entries:
+- date: '2026-07'
+  url: https://docs.inflection.io/whats-new/july-2026
+  title: July 2026
+  breaking: false
+  highlights:
+  - Inflection Public API (V1) — first public REST API covering contacts, static lists and email templates.
+  - Personalized Email Asset — one email asset holding a default version plus a per-contact version.
+  - Send Internal Alert flow step for Trigger Journeys.
+  - Journey entry/exit lifecycle events written back to the data warehouse and to Segment.
+  - Tracking URLs shortened by 70-85% (from ~1,200 to ~200-300 characters).
+  - Redesigned Help Center.
+- date: '2026-06'
+  url: https://docs.inflection.io/whats-new/june-2026
+  title: June 2026
+  breaking: false
+  highlights:
+  - New Journey Canvas — full UX rewrite with drag-and-drop, undo/redo, sticky notes; existing journeys auto-migrated.
+  - Account Scoring — 0-100 fit models exposed as a regular field on the Account object.
+  - Amplitude integration (read) — product activity events and user identify properties.
+  - SFDC Opportunity Object (Read) v2 — opportunity matching strategy configuration.
+  - Inbound webhook deletion and Trigger Journey audience filters.
+- date: '2026-06-10'
+  url: https://docs.inflection.io/whats-new/june-10-2026
+  title: June 10, 2026 (AI release)
+  breaking: false
+  highlights:
+  - 20+ new MCP tools.
+  - Edit a saved email template by name rather than by ID.
+  - Restyle emails in plain language; email grading; richer in-app chat.
+- date: '2026-06-03'
+  url: https://docs.inflection.io/whats-new/june-3-2026
+  title: June 3, 2026 (AI release)
+  breaking: false
+  highlights:
+  - Grounded audience building, faster email drafting, dashboard-accurate analytics, token math for PQL scores.
+- date: '2026-05'
+  url: https://docs.inflection.io/whats-new/may-2026
+  title: May 2026
+  breaking: false
+  highlights:
+  - Trigger Journeys — real-time enrollment on form submissions and inbound webhooks.
+  - SFDC Opportunity Object (Read) — native opportunity sync.
+  - Data Dictionary / Field Insights panel; field descriptions power AI agent context via MCP.
+  - Unified Mapping — Segment identify-call traits, and field deletion.
+- date: '2026-05-29'
+  url: https://docs.inflection.io/whats-new/may-29-2026
+  title: May 29, 2026 (AI release)
+  breaking: false
+  highlights:
+  - Analytics in chat and MCP; file attachments in in-app chat.
+- date: '2026-05-12'
+  url: https://docs.inflection.io/whats-new/may-12-2026
+  title: May 12, 2026 (AI release)
+  breaking: false
+  highlights:
+  - Streamlined MCP; build and edit by conversation; artifacts in in-app chat; agents in Slack and Asana.
+- date: '2026-04'
+  url: https://docs.inflection.io/whats-new/april-2026
+  title: April 2026
+  breaking: false
+  highlights:
+  - Data Normalization; Conversions for user field changes; Wait for SFDC Sync flow step; native form enhancements.
+- date: '2026-03'
+  url: https://docs.inflection.io/whats-new/march-2026
+  title: March 2026
+  breaking: false
+  highlights:
+  - Inflection Native Forms; outbound webhook response mapping; customizable exports.
+- date: '2026-02'
+  url: https://docs.inflection.io/whats-new/february-2026
+  title: February 2026
+  breaking: false
+  highlights:
+  - Viewer role; dynamic list usability; email template ID in Segment export.
+- date: '2026-01'
+  url: https://docs.inflection.io/whats-new/january-2026
+  title: January 2026
+  breaking: false
+  highlights:
+  - OAuth 2.1 authentication for Inflection MCP (beta).
+  - Conversions; Activity Log on the contact record; folder enhancements; MMC indicators.
+observed_api_changes:
+  note: >-
+    Not published by Inflection — recorded by API Evangelist by diffing the harvested OpenAPI between
+    the 2026-07-22 and 2026-08-13 harvests of https://docs.inflection.io/api-reference/openapi.yaml.
+  entries:
+  - date: '2026-08-13'
+    breaking: true
+    changes:
+    - '`/v1/email-templates` renamed to `/v1/emails`; operationId createEmailTemplate renamed to createEmail; tag "Email Templates" renamed to "Emails".'
+    - '`fromEmail` on email creation changed from a string to an object with `email` and `name`; `replyTo` became required; `preheader` added.'
+    - 'Added getEmail (GET /v1/emails/{id}) — emails are now create AND read over the API.'
+    - 'Added setEmailVersion (POST /v1/email-versions) for Personalized Email Assets, a new "Email Versions" tag.'
+    - 'Duplicate-list-name error corrected from 400 to 409 LIST_ALREADY_EXISTS in the spec.'

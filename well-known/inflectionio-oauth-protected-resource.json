@@ -1,0 +1,1 @@
+{"resource":"https://mcp.inflection.io/","authorization_servers":["https://auth-v2.inflection.io/"],"scopes_supported":["inflection_app"],"bearer_methods_supported":["header"],"resource_name":"Inflection MCP","resource_documentation":"https://docs.inflection.io/agents/mcp-trust-security"}

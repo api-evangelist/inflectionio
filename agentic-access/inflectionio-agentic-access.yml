@@ -1,19 +1,61 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: generated
-source: openapi/inflectionio-openapi-original.yml
+source: openapi/inflectionio-contact-activity-api-openapi.yml, openapi/inflectionio-contacts-api-openapi.yml,
+  openapi/inflectionio-email-versions-api-openapi.yml, openapi/inflectionio-emails-api-openapi.yml,
+  openapi/inflectionio-lists-and-members-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 18
+  operations: 20
   by_action_class:
-    connected: 9
-    acting: 9
+    connected: 10
+    acting: 10
   by_consequence:
-    read: 9
-    write: 9
+    read: 10
+    write: 10
   human_in_the_loop_required: 0
 operations:
+- path: /v1/contacts/{id}/product-activity
+  method: get
+  operationId: getProductActivity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/contacts/{id}/marketing-activity
+  method: get
+  operationId: getMarketingActivity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/contacts/{id}/activity-log
+  method: get
+  operationId: getActivityLog
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/contacts/{id}/salesforce
+  method: get
+  operationId: getSalesforceRecord
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
 - path: /v1/contacts/{id}
   method: get
   operationId: getContactById
@@ -92,39 +134,41 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/contacts/{id}/product-activity
-  method: get
-  operationId: getProductActivity
+- path: /v1/email-versions
+  method: post
+  operationId: setEmailVersion
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/contacts/{id}/marketing-activity
-  method: get
-  operationId: getMarketingActivity
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/emails
+  method: post
+  operationId: createEmail
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/contacts/{id}/activity-log
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/emails/{id}
   method: get
-  operationId: getActivityLog
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/contacts/{id}/salesforce
-  method: get
-  operationId: getSalesforceRecord
+  operationId: getEmail
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -219,22 +263,6 @@ operations:
 - path: /v1/lists/{id}/members/{contactId}
   method: delete
   operationId: removeListMember
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/email-templates
-  method: post
-  operationId: createEmailTemplate
   x-agentic-access:
     action-class: acting
     consequence: write

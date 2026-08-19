@@ -1,18 +1,49 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+source: https://docs.inflection.io/api-reference/introduction
 versioning:
   scheme: uri-path
   current: v1
   base: https://api.inflection.io/v1
-  docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/introduction.mdx
+  docs: https://docs.inflection.io/api-reference/introduction
+  shipped: '2026-07'
+  note: >-
+    The Developer API shipped as V1 in the July 2026 release and has had no second version. There is no
+    version header, no date-pinning, and no published version-negotiation policy.
 deprecation:
   policy_documented: false
   sunset_header: false
-  note: No deprecation policy or RFC 8594 Sunset/Deprecation header support is documented; no operations are marked deprecated in the OpenAPI.
+  note: >-
+    No deprecation policy and no RFC 8594 Sunset/Deprecation header support is documented; no operation
+    in the OpenAPI carries deprecated: true. This is a young API — but it has already made a breaking
+    change without a published policy (see breaking_changes below).
+breaking_changes:
+  note: >-
+    Observed by API Evangelist by diffing the published spec between harvests, not announced by
+    Inflection. Recorded because it is direct evidence of the missing deprecation policy.
+  observed:
+  - date: '2026-08-13'
+    change: >-
+      /v1/email-templates was replaced by /v1/emails; operationId createEmailTemplate became createEmail;
+      the fromEmail field changed from a string to an object; replyTo became required. No sunset window,
+      no deprecation notice, no dual-serving period documented.
+    see: changelog/inflectionio-changelog.yml
 sla:
   documented: false
+  note: No published uptime target or SLA. The pricing page advertises "Premium support" and a dedicated CSM as plan inclusions.
 status_page:
   found: false
-  note: No public status page (status.inflection.io does not resolve) was found as of this probe.
+  note: >-
+    No public status page. status.inflection.io does not resolve (DNS failure, probed 2026-08-13) and
+    no status link appears in the docs, the footer, or the trust page.
+changelog:
+  found: true
+  url: https://docs.inflection.io/whats-new/july-2026
+  scheme: dated-release-notes
+  see: changelog/inflectionio-changelog.yml
+support:
+  general: support@inflection.io
+  security: security@inflection.io
+  mcp_issues: customer success team via Slack (per the MCP docs)
+  docs: https://docs.inflection.io
 deprecated_operations: []

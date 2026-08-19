@@ -1,0 +1,122 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/inflectionio-mcp.yml + openapi/_original/inflectionio-openapi-original.yml
+note: >-
+  Binds Inflection's published MCP tool list to the Developer API operations that back it. The live
+  MCP tools/list is OAuth-gated (401 invalid_token, probed 2026-08-13), so tools are mapped by the
+  provider's own published tool documentation and semantics rather than by an introspected inputSchema;
+  confidence is set accordingly. The two surfaces are strongly divergent: the MCP server is the
+  platform-authoring surface (journeys, audiences, segments, tokens, analytics) while the REST API is
+  the contact-data surface. Only the personalized-email versions and contact lookup genuinely overlap.
+surfaces:
+  openapi:
+    file: openapi/_original/inflectionio-openapi-original.yml
+    base: https://api.inflection.io
+    operations: 20
+    auth: bearer PAT (inf_pat_) or OAuth 2.1 access token
+    gated: false
+  mcp:
+    url: https://mcp.inflection.io/
+    tools_documented: 17
+    auth: OAuth 2.1 + PKCE
+    gated: true
+    gate_detail: tools/list returns HTTP 401 invalid_token without a connected-app bearer token
+  graphql:
+    present: false
+crosswalk:
+- tool: set_email_version
+  category: personalized-email
+  rest: [setEmailVersion]
+  binding: rest
+  confidence: high
+  note: >-
+    Same operation on both surfaces — POST /v1/email-versions. The REST operation's requestBody
+    (contact identity + subject + preheader + html) is the tool's real input contract.
+- tool: get_contact_info
+  category: contacts
+  rest: [getContactByEmail, getActivityLog, getSalesforceRecord]
+  binding: rest
+  confidence: medium
+  note: >-
+    One tool fans out to three REST operations. query_type=lookup maps to getContactByEmail
+    (composite profile), activity_log to getActivityLog, sf_opportunities/sf_campaigns to
+    getSalesforceRecord. The MCP tool returns a composite the REST API does not assemble.
+- tool: list_platform_assets
+  category: platform-crud
+  rest: [getList]
+  binding: rest
+  confidence: low
+  note: >-
+    Only the static_list asset type has a REST read (GET /v1/lists/{id}); there is no REST list-of-lists
+    operation and no REST surface at all for journey, audience, segment, email_token, webhook,
+    inbound_webhook, form, account, conversion or salesforce_opportunity.
+- tool: get_platform_asset
+  category: platform-crud
+  rest: [getList, getEmail]
+  binding: rest
+  confidence: medium
+  note: asset_type static_list maps to getList; asset_type email maps to getEmail (GET /v1/emails/{id}).
+- tool: create_platform_asset
+  category: platform-crud
+  rest: [createList, createEmail]
+  binding: rest
+  confidence: medium
+  note: >-
+    asset_type static_list maps to createList (POST /v1/lists); asset_type email maps to createEmail
+    (POST /v1/emails). journey, email_token, tag and folder creation have no REST equivalent.
+- tool: update_platform_asset
+  category: platform-crud
+  rest: [updateList]
+  binding: rest
+  confidence: medium
+  note: >-
+    Only the static_list rename maps to updateList (PATCH /v1/lists/{id}). email, email_content,
+    journey, email_token, business_context, tag_asset, move_asset and folder patches are MCP-only.
+mcp_only:
+- tool: ask_agent
+  reason: Specialist-agent runs (audience, content, segment, token) are a server-side composite with no REST route.
+- tool: get_schema
+  reason: Platform metadata (person schema, event properties, filter types, operators, token functions) is not exposed over REST.
+- tool: get_platform_context
+  reason: Workspace context (business_context, email_settings, folders, tags, settings) has no REST route.
+- tool: data_dictionary
+  reason: Data-dictionary browsing (entities, fields, distributions, distinct values) is not exposed over REST.
+- tool: list_artifacts
+  reason: Thread-scoped agent draft artifacts exist only in the MCP session model.
+- tool: get_artifacts
+  reason: Thread-scoped agent draft artifacts exist only in the MCP session model.
+- tool: get_analytics_report
+  reason: No analytics operations exist in the Developer API.
+- tool: get_analytics_breakdown
+  reason: No analytics operations exist in the Developer API.
+- tool: get_knowledge
+  reason: Skill tree, cross-knowledge and Help Center search are documentation surfaces, not API resources.
+- tool: list_email_versions
+  reason: The Developer API can set a personalized email version but publishes no list operation.
+- tool: delete_email_version
+  reason: The Developer API can set a personalized email version but publishes no delete operation.
+rest_only:
+- capability: contact writes
+  operations: [createContact, updateContact, batchUpsertContacts, getContactTransaction]
+  reason: >-
+    Contact create/update/upsert and the async transaction poll are REST-only. The MCP surface reads
+    contacts (get_contact_info) but documents no contact writes.
+- capability: contact reads by id
+  operations: [getContactById]
+  reason: MCP contact lookup is by email only.
+- capability: contact activity
+  operations: [getProductActivity, getMarketingActivity]
+  reason: Product-event and marketing-touch histories are REST-only; MCP exposes activity_log only.
+- capability: static list membership
+  operations: [getListMembers, addListMembers, removeListMember]
+  reason: The MCP docs state explicitly that static-list member operations are not available via MCP.
+- capability: list deletion
+  operations: [deleteList]
+  reason: No MCP delete for static lists.
+coverage:
+  mcp_tools_documented: 17
+  mcp_tools_bound_to_rest: 6
+  mcp_only_tools: 11
+  rest_operations_total: 20
+  rest_operations_with_a_tool: 9
+  rest_only_operations: 11

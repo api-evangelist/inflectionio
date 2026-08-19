@@ -1,8 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Inflection Developer Contact Activity Lists and Members API
+  title: Inflection Developer API — Lists and Members
   version: '1.0'
-  description: A REST API for reading and writing the people in your Inflection workspace — their profiles, product and marketing activity, static lists, and email templates.
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
+    product and marketing activity, static lists, and emails.'
 servers:
 - url: https://api.inflection.io
   description: Production
@@ -17,7 +18,7 @@ paths:
       summary: Create a list
       tags:
       - Lists and Members
-      description: Takes a `name` (and optional `folder`); a duplicate name returns `400 LIST_ALREADY_EXISTS`.
+      description: Takes a `name` (and optional `folder`); a duplicate name returns `409 LIST_ALREADY_EXISTS`.
       requestBody:
         required: true
         content:
@@ -38,7 +39,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Envelope'
-        '400':
+        '409':
           description: Duplicate name (`LIST_ALREADY_EXISTS`).
   /v1/lists/{id}:
     get:
@@ -67,7 +68,8 @@ paths:
       summary: Update a list
       tags:
       - Lists and Members
-      description: 'Returns only `{ "staticListId", "success": true }` — a confirmation flag, not the updated list object. Re-fetch the list if you need its new state.'
+      description: 'Returns only `{ "staticListId", "success": true }`, a confirmation flag, not the updated
+        list object. Re-fetch the list if you need its new state.'
       parameters:
       - name: id
         in: path
@@ -99,7 +101,7 @@ paths:
       summary: Delete a list
       tags:
       - Lists and Members
-      description: Soft delete — returns `200` with a result body.
+      description: Soft delete; returns `200` with a result body.
       parameters:
       - name: id
         in: path
@@ -115,7 +117,8 @@ paths:
       summary: Get list members
       tags:
       - Lists and Members
-      description: Member records use **camelCase** field names (`firstName`, `companyName`, `phoneNumber`) — unlike the snake_case that contact lookups return for the same person.
+      description: Member records use **camelCase** field names (`firstName`, `companyName`, `phoneNumber`),
+        unlike the snake_case that contact lookups return for the same person.
       parameters:
       - name: id
         in: path
@@ -145,7 +148,8 @@ paths:
       summary: Add list members
       tags:
       - Lists and Members
-      description: Add members by contact id. Unknown ids are skipped and reported in `errors` with a still-successful `200` (partial success); the response reports how many were `added`.
+      description: Add members by contact id. Unknown ids are skipped and reported in `errors` with a
+        still-successful `200` (partial success); the response reports how many were `added`.
       parameters:
       - name: id
         in: path
@@ -191,12 +195,18 @@ paths:
         '200':
           description: Member removed.
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
+        permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
     Envelope:
       type: object
       properties:
         data:
-          description: Payload — object or array, shape depends on the endpoint.
+          description: 'Payload: object or array, shape depends on the endpoint.'
         pagination:
           type: object
           description: Present only on paged list endpoints.
@@ -235,8 +245,3 @@ components:
             timestamp:
               type: string
               format: date-time
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.

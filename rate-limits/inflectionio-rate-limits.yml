@@ -1,0 +1,50 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.inflection.io/api-reference/rate-limits
+docs: https://docs.inflection.io/api-reference/rate-limits
+limit_count: 2
+summary: >-
+  Inflection publishes an explicit rate limit and explicitly disclaims usage caps: there are no monthly
+  quotas or total-call limits on the Developer API, only a per-second ceiling shared by every credential
+  in a workspace. No rate-limit response headers are documented — the only runtime signal an agent gets
+  is the 429 status, so back-off has to be time-based rather than header-driven.
+rate_limits:
+- id: developer-api-workspace
+  scope: per-workspace
+  applies_to: every /v1 endpoint on https://api.inflection.io
+  limit: 1000
+  unit: requests
+  window: 1s
+  burst: null
+  shared_by: all of a workspace's credentials — Personal Access Tokens and OAuth connected apps draw on one budget
+  exhaustion_status: 429
+  exhaustion_body: 429 Too Many Requests
+  remediation: Back off briefly and retry; exponential backoff with jitter is sufficient per the docs.
+  source: https://docs.inflection.io/api-reference/rate-limits
+- id: inbound-webhook-submissions
+  scope: per-inbound-webhook-connection
+  applies_to: inbound webhook submissions into Inflection
+  limit: 1000
+  unit: requests
+  window: 1m
+  enforced: false
+  note: >-
+    Published as a recommendation, not a hard cap — "We recommend limiting webhook submissions to
+    1,000 requests/minute. If you need to utilize a higher throughput, please reach out to your
+    customer success team."
+  source: https://docs.inflection.io/connections/inbound-webhooks
+usage_quotas:
+  published: false
+  note: >-
+    The docs state the Developer API has no usage limits — no monthly quotas, no total-call caps.
+    Commercial metering is on Monthly Marketed Contacts (journey throughput), not API calls; see
+    plans/inflectionio-plans-pricing.yml.
+response_headers:
+  documented: false
+  headers: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After headers are documented on the rate-limits page or
+    present in the OpenAPI. An agent cannot read remaining budget; it can only observe the 429.
+see:
+- conventions/inflectionio-conventions.yml
+- errors/inflectionio-problem-types.yml

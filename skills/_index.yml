@@ -1,16 +1,38 @@
-generated: '2026-07-19'
-method: generated
-source: openapi/inflectionio-openapi-original.yml
+generated: '2026-08-13'
+method: searched
+source: https://docs.inflection.io/.well-known/agent-skills/inflection/skill.md + openapi/_original/inflectionio-openapi-original.yml
+note: >-
+  Inflection publishes its own Agent Skill from its docs host, advertised by the A2A agent card at
+  docs.inflection.io/.well-known/agent-card.json. That file is saved verbatim below. The remaining
+  skills are API Evangelist-generated, one per marquee Developer API flow, grounded in operationIds
+  verified against the harvested OpenAPI.
 skills:
+- file: inflectionio-provider-published-skill.md
+  name: Inflection
+  method: searched
+  source: https://docs.inflection.io/.well-known/agent-skills/inflection/skill.md
+  publisher: Inflection
+  fetched: '2026-08-13'
+  description: >-
+    The provider's own packaged skill — product summary, when-to-use, API endpoint/auth quick reference,
+    MCP tool surface, and platform conventions. Advertised as skill id "inflection" on the A2A agent card.
 - file: inflectionio-sync-contact.md
   name: Sync a contact into Inflection
-  api: openapi/inflectionio-openapi-original.yml
+  method: generated
+  api: openapi/_original/inflectionio-openapi-original.yml
   operations: [getContactByEmail, createContact, updateContact, getContactTransaction]
 - file: inflectionio-batch-upsert-contacts.md
   name: Batch upsert contacts
-  api: openapi/inflectionio-openapi-original.yml
+  method: generated
+  api: openapi/_original/inflectionio-openapi-original.yml
   operations: [batchUpsertContacts, getContactTransaction]
 - file: inflectionio-build-static-list.md
   name: Build and populate a static list
-  api: openapi/inflectionio-openapi-original.yml
+  method: generated
+  api: openapi/_original/inflectionio-openapi-original.yml
   operations: [createList, addListMembers, getListMembers, removeListMember]
+- file: inflectionio-personalized-email-version.md
+  name: Send a per-contact personalized email version
+  method: generated
+  api: openapi/_original/inflectionio-openapi-original.yml
+  operations: [createEmail, getEmail, setEmailVersion, getContactByEmail]

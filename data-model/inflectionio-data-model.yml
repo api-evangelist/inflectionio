@@ -1,6 +1,6 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: derived
-source: openapi/inflectionio-openapi-original.yml
+source: openapi/_original/inflectionio-openapi-original.yml
 entities:
 - name: Contact
   description: A person in the workspace — identified by id or email, with attributes under properties (snake_case).
@@ -24,9 +24,22 @@ entities:
 - name: ListMember
   description: The membership join of a Contact on a List.
   operations: [getListMembers, addListMembers, removeListMember]
-- name: EmailTemplate
-  description: A reusable email template that opens in the Inflection editor.
-  operations: [createEmailTemplate]
+- name: Email
+  description: >-
+    An HTML email created in Inflection. Create-and-read over the API; editing happens in the hosted
+    BEE editor at the returned editorUrl. Named uniquely per workspace.
+  id_field: id
+  fields: [id, name, subject, preheader, html, fromEmail, replyTo, editorUrl]
+  operations: [createEmail, getEmail]
+- name: EmailVersion
+  description: >-
+    A per-contact personalized version of a Personalized Email Asset — one version per contact per
+    asset; re-posting replaces it. Contacts without a version receive the asset's default email.
+  fields: [subject, preheader, html]
+  operations: [setEmailVersion]
+- name: FromEmail
+  description: The sender on an Email — an object with email and name.
+  embedded_in: Email
 - name: ProductActivity
   description: A contact's product usage events.
   operations: [getProductActivity]
@@ -34,7 +47,9 @@ entities:
   description: A contact's marketing engagement events.
   operations: [getMarketingActivity]
 - name: ActivityLog
-  description: A contact's combined product + marketing activity log.
+  description: >-
+    A paged change log of the contact's record — updates to contact properties and to the underlying
+    product-user record. Not an engagement feed; use ProductActivity/MarketingActivity for events.
   operations: [getActivityLog]
 - name: SalesforceRecord
   description: The Salesforce record mapped to a contact.
@@ -72,3 +87,11 @@ relationships:
   to: Contact
   type: has_many
   via: async write results (results[].email)
+- from: Email
+  to: EmailVersion
+  type: has_many
+  via: personalized email asset id (POST /v1/email-versions)
+- from: EmailVersion
+  to: Contact
+  type: belongs_to
+  via: contact email/id on the version payload

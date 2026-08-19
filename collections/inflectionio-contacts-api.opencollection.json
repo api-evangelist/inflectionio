@@ -1,0 +1,130 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Inflection Developer Contact Activity Contacts API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get contact by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the full stored record under `data.properties` (snake_case keys). A missing contact returns `400 BAS-E-002` (not the more conventional `404`)."
+        },
+        {
+          "info": {
+            "name": "Update a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.inflection.io/v1/contacts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enqueues an update (PENDING transaction), applied asynchronously."
+        },
+        {
+          "info": {
+            "name": "Get contact by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/by-email/:email",
+            "params": [
+              {
+                "name": "email",
+                "value": "jane%40acme.com",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the full stored record under `data.properties` (snake_case keys). URL-encode the email (`@` → `%40`). A missing contact returns `400 BAS-E-002`."
+        },
+        {
+          "info": {
+            "name": "Create a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.inflection.io/v1/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enqueues a new contact and returns a PENDING transaction. Keys inside `properties` must be **snake_case**.\n\n`POST` is **create-only**. Re-posting an existing email resolves to `FAILED` in the transaction result. To create-or-update, use **Batch upsert contacts** instead."
+        },
+        {
+          "info": {
+            "name": "Batch upsert contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.inflection.io/v1/contacts/batch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Upserts up to 1,000 contacts in one transaction — new emails come back `CREATED`, existing ones `UPDATED`. This is the reliable create-or-update path for both new and existing contacts (single `POST` is create-only)."
+        },
+        {
+          "info": {
+            "name": "Get a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.inflection.io/v1/contacts/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns `PENDING`, `DONE` (with per-contact `results`), or `NOT_EXIST` for an unknown id (still HTTP `200`). See [Asynchronous writes](/api-reference/async-writes)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,23 +1,56 @@
 overlay: 1.0.0
 info:
   title: API Evangelist enhancements for Inflection Developer API
-  version: 1.0.0
-extends: openapi/inflectionio-openapi-original.yml
+  version: 1.1.0
+extends: openapi/_original/inflectionio-openapi-original.yml
 actions:
 - target: $.info
   update:
-    x-apievangelist-enriched: '2026-07-19'
+    x-apievangelist-enriched: '2026-08-13'
     x-apievangelist-artifacts:
       authentication: authentication/inflectionio-authentication.yml
+      scopes: scopes/inflectionio-scopes.yml
       conventions: conventions/inflectionio-conventions.yml
       errors: errors/inflectionio-problem-types.yml
       data-model: data-model/inflectionio-data-model.yml
       lifecycle: lifecycle/inflectionio-lifecycle.yml
+      changelog: changelog/inflectionio-changelog.yml
       conformance: conformance/inflectionio-conformance.yml
       agentic-access: agentic-access/inflectionio-agentic-access.yml
+      rate-limits: rate-limits/inflectionio-rate-limits.yml
+      plans: plans/inflectionio-plans-pricing.yml
+      mcp: mcp/inflectionio-mcp.yml
+      tool-crosswalk: mcp/inflectionio-tool-crosswalk.yml
+      a2a: a2a/inflectionio-a2a.yml
+      webhooks: asyncapi/inflectionio-webhooks.yml
+      well-known: well-known/inflectionio-well-known.yml
+      skills: skills/_index.yml
 - target: $.info
   update:
     x-apievangelist-notes: >-
       Reads are synchronous; contact writes (POST/PATCH /v1/contacts*) are asynchronous and return a
-      PENDING transaction to poll. Errors use a custom data/errors/meta envelope (not RFC 9457). Auth is
-      a scoped Personal Access Token (READ/WRITE).
+      PENDING transaction to poll. Errors use a custom data/errors/meta envelope (not RFC 9457) and
+      not-found is inconsistent by resource — 400 BAS-E-002 for a contact, 404 NOT_FOUND for a list or
+      email. A mistyped path under /v1 returns 401, not 404. Auth is a scoped Personal Access Token
+      (READ/WRITE) or an OAuth 2.1 connected-app token; the spec declares only the http/bearer scheme,
+      so the OAuth 2.1 surface documented at auth-v2.inflection.io is invisible to a spec-only reader.
+      No idempotency key exists. Rate limit is 1,000 req/s/workspace with no rate-limit response headers.
+- target: $.servers
+  update:
+    x-apievangelist-hosts:
+      api: https://api.inflection.io
+      mcp: https://mcp.inflection.io/
+      auth: https://auth-v2.inflection.io
+      docs: https://docs.inflection.io
+- target: $.components.securitySchemes.bearerAuth
+  update:
+    x-apievangelist-oauth2:
+      authorizationUrl: https://auth-v2.inflection.io/oauth2/authorize
+      tokenUrl: https://auth-v2.inflection.io/oauth2/token
+      scopes: [inflection_app]
+      pkce: S256
+      discovery: https://auth-v2.inflection.io/.well-known/oauth-authorization-server
+      note: >-
+        The spec models only the http/bearer scheme. Both a Personal Access Token (inf_pat_) and an
+        OAuth 2.1 access token are accepted on this header; only the OAuth token works against the MCP
+        server.

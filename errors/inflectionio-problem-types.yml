@@ -1,7 +1,7 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: openapi/inflectionio-openapi-original.yml
-docs: https://github.com/inflectionio/mintlify-docs/blob/develop/api-reference/errors.mdx
+source: https://docs.inflection.io/api-reference/errors
+docs: https://docs.inflection.io/api-reference/errors
 format: custom-envelope
 envelope:
   location: errors[]
@@ -14,36 +14,89 @@ problems:
 - status: 400
   code: BAS-E-002
   title: Contact not found
-  detail: Returned when a contact cannot be found by id or by email.
+  detail: Returned when a contact cannot be found by id or by email. Note this is a 400, not a 404.
   source_operations:
-  - openapi/inflectionio-openapi-original.yml#getContactById
-  - openapi/inflectionio-openapi-original.yml#getContactByEmail
+  - openapi/_original/inflectionio-openapi-original.yml#getContactById
+  - openapi/_original/inflectionio-openapi-original.yml#getContactByEmail
 - status: 404
   code: NOT_FOUND
-  title: List or template not found
-  detail: Returned when a list or email template cannot be found.
+  title: List or email not found
+  detail: Returned when a static list or an email cannot be found.
   source_operations:
-  - openapi/inflectionio-openapi-original.yml#getList
-  - openapi/inflectionio-openapi-original.yml#getSalesforceRecord
-- status: 400
+  - openapi/_original/inflectionio-openapi-original.yml#getList
+  - openapi/_original/inflectionio-openapi-original.yml#getEmail
+- status: 409
   code: LIST_ALREADY_EXISTS
   title: Duplicate list name
   detail: Returned when creating a list whose name already exists.
   source_operations:
-  - openapi/inflectionio-openapi-original.yml#createList
+  - openapi/_original/inflectionio-openapi-original.yml#createList
 - status: 409
   code: TEMPLATE_ALREADY_EXISTS
-  title: Duplicate template name
-  detail: Returned when creating an email template whose name already exists.
+  title: Duplicate email name
+  detail: Returned when creating an email whose name already exists.
   source_operations:
-  - openapi/inflectionio-openapi-original.yml#createEmailTemplate
+  - openapi/_original/inflectionio-openapi-original.yml#createEmail
+- status: 400
+  code: VALIDATION_ERROR
+  title: Request body fails validation
+  detail: Carries a field-level detail such as `fromEmail._schema` identifying the offending field.
+  source_operations:
+  - openapi/_original/inflectionio-openapi-original.yml#createEmail
+  - openapi/_original/inflectionio-openapi-original.yml#setEmailVersion
+- status: 400
+  code: UnapprovedEmailDomainException
+  title: From-email domain not approved
+  detail: The sending domain has not been approved for the organization.
+  source_operations:
+  - openapi/_original/inflectionio-openapi-original.yml#createEmail
+- status: 400
+  code: UnknownVariablesException
+  title: Unknown token in email HTML
+  detail: HTML tokens are validated on create; an unrecognized token is rejected.
+  source_operations:
+  - openapi/_original/inflectionio-openapi-original.yml#createEmail
+- status: 404
+  code: CONTACT_NOT_FOUND
+  title: Unknown contact on list removal
+  detail: Returned when removing a contact that is not a member of the list.
+  source_operations:
+  - openapi/_original/inflectionio-openapi-original.yml#removeListMember
+- status: 429
+  code: null
+  title: Rate limit exceeded
+  detail: >-
+    Over 1,000 requests/second/workspace. No rate-limit headers are published; back off with
+    exponential backoff and jitter.
+  see: rate-limits/inflectionio-rate-limits.yml
+errors_inside_200:
+  note: >-
+    Two documented cases return HTTP 200 and still carry an error signal. An agent must read the body,
+    not just the status.
+  cases:
+  - code: CONTACTS_NOT_FOUND
+    status: 200
+    detail: >-
+      Bulk member add with unknown contact ids — valid ids are added, skipped ids are reported in
+      errors[]. Partial success.
+    source_operations: [openapi/_original/inflectionio-openapi-original.yml#addListMembers]
+  - code: NOT_EXIST
+    status: 200
+    detail: >-
+      Polling an unknown transaction id returns 200 with status NOT_EXIST rather than an HTTP error.
+    source_operations: [openapi/_original/inflectionio-openapi-original.yml#getContactTransaction]
 auth_status_codes:
 - status: 401
   title: Unauthorized
-  detail: Missing, malformed, or invalid token. Also returned (deny-by-default) for unknown paths/methods under /v1. Empty body.
+  detail: >-
+    Missing, malformed, or invalid token. Also returned (deny-by-default) for unknown paths/methods
+    under /v1 — a mistyped path looks like a credential failure. Empty body.
 - status: 403
   title: Forbidden
-  detail: Token is valid but lacks the required scope (e.g. a READ token attempting a write). Empty body.
+  detail: >-
+    Token is valid but lacks the required permission — a READ-scoped PAT attempting a write, a viewer's
+    OAuth token doing the same, or a service-to-service OAuth token with no user behind it. Empty body.
 notes: >-
-  A missing contact returns 400 (BAS-E-002) while a missing list or template returns 404 (NOT_FOUND) —
-  handle both; there is no single not-found code across resources.
+  Not-found is inconsistent by resource: a missing contact returns 400 BAS-E-002 while a missing list
+  or email returns 404 NOT_FOUND. Handle both — there is no single not-found code across resources.
+  The catalog is not RFC 9457; nothing is served as application/problem+json.

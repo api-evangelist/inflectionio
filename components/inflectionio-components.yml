@@ -1,0 +1,54 @@
+generated: '2026-08-13'
+method: searched
+source: https://docs.inflection.io/connections/web-tracking
+summary: >-
+  Inflection ships client-side and hosted surfaces, but none of them are distributed as a public,
+  versioned component library — there is no npm element package and no published CDN loader URL. Each
+  surface is minted per workspace inside the app and pasted into the customer's site, so a consumer
+  cannot pin a version and neither can we. Recorded here because these are the only browser-side
+  artifacts the platform ships.
+component_count: 3
+families:
+- name: Web tracking script
+  kind: script-snippet
+  docs: https://docs.inflection.io/connections/web-tracking
+  distribution: per-workspace snippet copied from Settings > Website Tracking (or emailed to a developer)
+  loader_url: null
+  version: null
+  version_note: >-
+    No public CDN URL and no version is published; the snippet is generated per workspace, so a
+    consumer cannot tell which build they are running. Recorded as null deliberately — checked, nothing
+    to record.
+  placement: must be in the <head>; only pages carrying the snippet are tracked, subdomains included
+  domain_model: base domains are registered and approved (up to 24h); subdomains toggled individually
+  captures: page visits, session activity, associated to a contact once identified
+  limitations: [iFrames and lightboxes cannot be tracked, script blockers suppress tracking]
+- name: Inflection Native Forms
+  kind: hosted-form
+  docs: https://docs.inflection.io/connections/inflection-forms
+  distribution: authored in the Inflection dashboard; submissions land as form assets
+  version: null
+  version_note: Hosted surface, no versioned artifact published.
+  note: >-
+    Native forms are the first-party alternative to the Custom Forms / inbound-webhook path. Form
+    submissions are a qualifying trigger for Trigger Journeys.
+- name: Third-party form identity field
+  kind: hidden-input-integration
+  docs: https://docs.inflection.io/connections/web-tracking
+  distribution: hand-added hidden input in Formstack/Webflow form builders
+  version: null
+  version_note: Not a distributed artifact — a documented markup convention.
+  note: >-
+    A custom hidden input is embedded in third-party forms so anonymous browsing activity can be
+    associated with the submitting contact. Documented as the recommended fallback.
+hosted_surfaces:
+- name: BEE email editor
+  kind: hosted-editor
+  note: >-
+    Emails created via POST /v1/emails return an `editorUrl` that opens Inflection's hosted visual
+    editor. Not embeddable by the customer — a hosted destination, recorded for completeness.
+  see: openapi/inflectionio-emails-api-openapi.yml
+no_component_library:
+  npm: false
+  cdn: false
+  note: See packages/inflectionio-packages.yml — no first-party package exists in any registry.

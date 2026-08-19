@@ -3,9 +3,8 @@ info:
   title: Inflection Developer API
   version: "1.0"
   description: >-
-    A REST API for reading and writing the people in your Inflection workspace —
-    their profiles, product and marketing activity, static lists, and email
-    templates.
+    A REST API for reading and writing the people in your Inflection workspace:
+    their profiles, product and marketing activity, static lists, and emails.
 servers:
   - url: https://api.inflection.io
     description: Production
@@ -16,13 +15,13 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      description: Personal Access Token. READ scope for GET, WRITE scope for POST/PATCH/DELETE.
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
     Envelope:
       type: object
       properties:
         data:
-          description: Payload — object or array, shape depends on the endpoint.
+          description: "Payload: object or array, shape depends on the endpoint."
         pagination:
           type: object
           description: Present only on paged list endpoints.
@@ -141,7 +140,10 @@ paths:
       summary: Update a contact
       tags: [Contacts]
       description: >-
-        Enqueues an update (PENDING transaction), applied asynchronously.
+        Updates an existing contact. The write is processed asynchronously:
+        the call returns a transaction with status `PENDING`, which you can
+        poll to confirm the result (see [Asynchronous
+        writes](/api-reference/async-writes)).
       parameters:
         - name: id
           in: path
@@ -203,8 +205,11 @@ paths:
       summary: Create a contact
       tags: [Contacts]
       description: >-
-        Enqueues a new contact and returns a PENDING transaction. Keys inside
-        `properties` must be **snake_case**.
+        Creates a new contact. The write is processed asynchronously: the
+        call returns a transaction with status `PENDING`, which you can poll
+        to confirm the result (see [Asynchronous
+        writes](/api-reference/async-writes)). Property names inside
+        `properties` must be **snake_case** (for example, `first_name`).
 
 
         `POST` is **create-only**. Re-posting an existing email resolves to
@@ -246,7 +251,7 @@ paths:
       summary: Batch upsert contacts
       tags: [Contacts]
       description: >-
-        Upserts up to 1,000 contacts in one transaction — new emails come
+        Upserts up to 1,000 contacts in one transaction. New emails come
         back `CREATED`, existing ones `UPDATED`. This is the reliable
         create-or-update path for both new and existing contacts (single
         `POST` is create-only).
@@ -317,8 +322,9 @@ paths:
       summary: Get product activity
       tags: [Contact Activity]
       description: >-
-        A paged list of in-app product events (page views, clicks, custom
-        events). Empty for a contact with no activity.
+        A paged list of in-app product events (login, signup, custom
+        events). Empty for a contact with no product activity, and for an
+        unknown contact id.
       parameters:
         - name: id
           in: path
@@ -349,7 +355,7 @@ paths:
       summary: Get marketing activity
       tags: [Contact Activity]
       description: >-
-        A paged list of marketing touches for the contact — email sends,
+        A paged list of marketing touches for the contact: email sends,
         opens, clicks, and journey activity.
       parameters:
         - name: id
@@ -369,8 +375,10 @@ paths:
       summary: Get activity log
       tags: [Contact Activity]
       description: >-
-        A combined, paged log of the contact's product and marketing
-        activity in one stream.
+        A paged change log of the contact's record: updates to contact
+        properties and to the properties of the underlying product-user
+        record. For engagement and events, use the product-activity and
+        marketing-activity endpoints instead.
       parameters:
         - name: id
           in: path
@@ -378,7 +386,7 @@ paths:
           schema: { type: string }
       responses:
         "200":
-          description: Combined activity log.
+          description: Paged log of record property changes.
           content:
             application/json:
               schema:
@@ -413,7 +421,7 @@ paths:
       tags: [Lists and Members]
       description: >-
         Takes a `name` (and optional `folder`); a duplicate name returns
-        `400 LIST_ALREADY_EXISTS`.
+        `409 LIST_ALREADY_EXISTS`.
       requestBody:
         required: true
         content:
@@ -431,7 +439,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Envelope'
-        "400":
+        "409":
           description: Duplicate name (`LIST_ALREADY_EXISTS`).
   /v1/lists/{id}:
     get:
@@ -458,7 +466,7 @@ paths:
       summary: Update a list
       tags: [Lists and Members]
       description: >-
-        Returns only `{ "staticListId", "success": true }` — a confirmation
+        Returns only `{ "staticListId", "success": true }`, a confirmation
         flag, not the updated list object. Re-fetch the list if you need
         its new state.
       parameters:
@@ -487,7 +495,7 @@ paths:
       operationId: deleteList
       summary: Delete a list
       tags: [Lists and Members]
-      description: Soft delete — returns `200` with a result body.
+      description: Soft delete; returns `200` with a result body.
       parameters:
         - name: id
           in: path
@@ -503,7 +511,7 @@ paths:
       tags: [Lists and Members]
       description: >-
         Member records use **camelCase** field names (`firstName`,
-        `companyName`, `phoneNumber`) — unlike the snake_case that contact
+        `companyName`, `phoneNumber`), unlike the snake_case that contact
         lookups return for the same person.
       parameters:
         - name: id
@@ -570,20 +578,22 @@ paths:
       responses:
         "200":
           description: Member removed.
-  /v1/email-templates:
+  /v1/emails:
     post:
-      operationId: createEmailTemplate
-      summary: Create an email template
-      tags: [Email Templates]
+      operationId: createEmail
+      summary: Create an email
+      tags: [Emails]
       description: >-
-        Templates are **create-only** over the API — there's no read,
-        update, or delete route. After creating, edit in the UI via the
-        returned `editorUrl`.
+        Emails are **create and read** over the API. After creating, you
+        can edit the HTML via the returned `editorUrl`; fetch it back with
+        **Get an email**.
 
 
+        - Only HTML emails can be created via the API: pass the full email
+          body in the `html` field.
         - The from-email domain must be org-approved, otherwise `400
           UnapprovedEmailDomainException`.
-        - HTML tokens are validated — an unknown token returns `400
+        - HTML tokens are validated; an unknown token returns `400
           UnknownVariablesException`.
         - A duplicate name returns `409 TEMPLATE_ALREADY_EXISTS`.
       requestBody:
@@ -592,13 +602,19 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name, html, subject, fromEmail]
+              required: [name, html, subject, fromEmail, replyTo]
               properties:
                 name: { type: string }
                 html: { type: string }
                 subject: { type: string }
-                fromEmail: { type: string }
+                fromEmail:
+                  type: object
+                  description: The sender, an object with `email` and `name`.
+                  properties:
+                    email: { type: string }
+                    name: { type: string }
                 replyTo: { type: string }
+                preheader: { type: string }
       responses:
         "200":
           description: Template created, with an editorUrl to continue in the UI.
@@ -617,3 +633,114 @@ paths:
           description: Unapproved domain or unknown token.
         "409":
           description: Duplicate template name.
+  /v1/email-versions:
+    post:
+      operationId: setEmailVersion
+      summary: Set a personalized email version
+      tags: [Email Versions]
+      description: >-
+        Stores the personalized version of a [Personalized Email
+        Asset](/agents/personalized-email) for one contact. One version per
+        contact per asset; re-posting for the same contact replaces their
+        version. At send time the contact receives their version if it's
+        ready; contacts without one get the asset's default email.
+
+
+        Validation on arrival: `email` must resolve to an existing contact,
+        and `html` must contain the literal `{{unsubscribe_url}}` token,
+        contain no other `{{…}}` tokens, and stay within 500 KB. A version
+        that fails validation is rejected with a reason (visible on the
+        asset's **Activity** tab) and the default email sends instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [assetId, email, subject, preheader, html]
+              properties:
+                assetId:
+                  type: string
+                  description: >-
+                    ID of the Personalized Email Asset. Copy it from the
+                    asset URL (`…/assets/email/per-user/<ASSET_ID>/versions`)
+                    or its **How to add versions** tab.
+                email:
+                  type: string
+                  format: email
+                  description: The contact's email. Must match an existing contact.
+                subject:
+                  type: string
+                  description: The personalized subject line.
+                preheader:
+                  type: string
+                  description: The inbox preview text.
+                html:
+                  type: string
+                  description: >-
+                    Full HTML of the personalized email. Must include the
+                    literal `{{unsubscribe_url}}` token; no other `{{…}}`
+                    tokens are allowed. Max 500 KB.
+                expiresAt:
+                  type: string
+                  format: date-time
+                  description: >-
+                    Optional ISO-8601 expiry. After this moment the contact
+                    falls back to the default email. Omit for a version that
+                    never expires.
+            example:
+              assetId: 6a60ee387b78bbc9a263aba0
+              email: contact@example.com
+              subject: A note just for you
+              preheader: Personalized for you
+              html: "<!doctype html>…<a href=\"{{unsubscribe_url}}\">Unsubscribe</a>…"
+              expiresAt: "2030-01-01T00:00:00Z"
+      responses:
+        "200":
+          description: Version stored.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status: { type: string, example: stored }
+        "400":
+          description: >-
+            Validation failed: malformed JSON, unknown `assetId`, contact
+            not found, missing `{{unsubscribe_url}}`, a disallowed `{{…}}`
+            token, or HTML over 500 KB.
+        "401":
+          description: Missing or malformed bearer token.
+  /v1/emails/{id}:
+    get:
+      operationId: getEmail
+      summary: Get an email
+      tags: [Emails]
+      description: >-
+        Fetch one created email by id, including its `editorUrl`. A missing
+        email returns **404** (unlike contacts, which report 400).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: The email. Some nested fields are free-form objects.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Envelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        description: The email record, including `editorUrl`.
+        "404":
+          description: No email exists with that id.
