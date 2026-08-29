@@ -14,6 +14,18 @@ description: >-
   by specialist agents. Surfaced as a version-one-ventures portfolio company and enriched from the
   provider's public developer, agent, and trust surfaces.
 url: https://raw.githubusercontent.com/api-evangelist/inflectionio/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: usage
   onboarding: sales
