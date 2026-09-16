@@ -260,6 +260,8 @@ common:
   url: packages/inflectionio-packages.yml
 - type: Components
   url: components/inflectionio-components.yml
+- type: Contact
+  url: mailto:support@inflection.io
 x-enrichment:
   date: '2026-08-13'
   status: enriched
