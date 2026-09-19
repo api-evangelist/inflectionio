@@ -61,7 +61,7 @@ tags:
 - MCP
 - Agents
 - Artificial Intelligence
-- Customer Journeys
+- Customer Journey
 - Webhook
 tags_raw:
 - Company
@@ -113,6 +113,8 @@ apis:
   humanURL: https://docs.inflection.io/api-reference/introduction
   baseURL: https://api.inflection.io/v1
   tags:
+  - Email
+  tags_raw:
   - Emails
   properties:
   - type: OpenAPI
