@@ -1,20 +1,33 @@
 {
   "provider": "inflectionio",
   "sources": [
-    "inflectionio-contact-activity-api-openapi.yml",
-    "inflectionio-contacts-api-openapi.yml",
-    "inflectionio-email-templates-api-openapi.yml",
-    "inflectionio-lists-and-members-api-openapi.yml"
+    "_original/inflectionio-openapi-original.yml"
   ],
   "outputs": [
     "inflectionio-contact-activity-api-openapi.yml",
     "inflectionio-contacts-api-openapi.yml",
-    "inflectionio-email-templates-api-openapi.yml",
+    "inflectionio-email-versions-api-openapi.yml",
+    "inflectionio-emails-api-openapi.yml",
     "inflectionio-lists-and-members-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "inflectionio-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "inflectionio-openapi-original.yml: declared missing tag: Contact Activity",
+    "inflectionio-openapi-original.yml: declared missing tag: Contacts",
+    "inflectionio-openapi-original.yml: declared missing tag: Email Versions",
+    "inflectionio-openapi-original.yml: declared missing tag: Emails",
+    "inflectionio-openapi-original.yml: declared missing tag: Lists and Members",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "inflectionio-contact-activity-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "inflectionio-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "inflectionio-email-versions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "inflectionio-emails-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "inflectionio-lists-and-members-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -1,9 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Inflection Developer API — Emails
+  title: Inflection Developer Emails API
   version: '1.0'
-  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
-    product and marketing activity, static lists, and emails.'
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles, product and marketing activity, static lists, and emails.'
 servers:
 - url: https://api.inflection.io
   description: Production
@@ -18,12 +17,22 @@ paths:
       summary: Create an email
       tags:
       - Emails
-      description: "Emails are **create and read** over the API. After creating, you can edit the HTML\
-        \ via the returned `editorUrl`; fetch it back with **Get an email**.\n\n- Only HTML emails can\
-        \ be created via the API: pass the full email\n  body in the `html` field.\n- The from-email domain\
-        \ must be org-approved, otherwise `400\n  UnapprovedEmailDomainException`.\n- HTML tokens are\
-        \ validated; an unknown token returns `400\n  UnknownVariablesException`.\n- A duplicate name\
-        \ returns `409 TEMPLATE_ALREADY_EXISTS`."
+      description: 'Emails are **create and read** over the API. After creating, you can edit the HTML via the returned `editorUrl`; fetch it back with **Get an email**.
+
+
+        - Only HTML emails can be created via the API: pass the full email
+
+        body in the `html` field.
+
+        - The from-email domain must be org-approved, otherwise `400
+
+        UnapprovedEmailDomainException`.
+
+        - HTML tokens are validated; an unknown token returns `400
+
+        UnknownVariablesException`.
+
+        - A duplicate name returns `409 TEMPLATE_ALREADY_EXISTS`.'
       requestBody:
         required: true
         content:
@@ -80,8 +89,7 @@ paths:
       summary: Get an email
       tags:
       - Emails
-      description: Fetch one created email by id, including its `editorUrl`. A missing email returns **404**
-        (unlike contacts, which report 400).
+      description: Fetch one created email by id, including its `editorUrl`. A missing email returns **404** (unlike contacts, which report 400).
       parameters:
       - name: id
         in: path
@@ -104,12 +112,6 @@ paths:
         '404':
           description: No email exists with that id.
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
-        permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
     Envelope:
       type: object
@@ -154,3 +156,8 @@ components:
             timestamp:
               type: string
               format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ permission for GET, WRITE for POST/PATCH/DELETE.

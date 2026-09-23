@@ -8,15 +8,13 @@ docs:
 - https://docs.inflection.io/agents/mcp-trust-security
 - https://docs.inflection.io/agents/integrate-with-claude
 - https://docs.inflection.io/agents/integrate-with-chatgpt
-note: >-
-  Inflection publishes a first-party REMOTE MCP server at https://mcp.inflection.io/, documented at
-  docs.inflection.io/agents/inflection-mcp and covered by its own trust & security page. The server is
-  a broader surface than the Developer API: it drives journeys, audiences, segments, emails, tokens and
-  analytics through specialist agents, most of which have no REST equivalent. tools/list is OAuth-gated
-  (probed 2026-08-13: HTTP 401 invalid_token with a WWW-Authenticate challenge pointing at
-  /.well-known/oauth-protected-resource), so the tool list below is transcribed from the provider's
-  published tool documentation, names and descriptions only. Input schemas require authenticated
-  introspection with a connected-app token.
+note: 'Inflection publishes a first-party REMOTE MCP server at https://mcp.inflection.io/, documented
+  at docs.inflection.io/agents/inflection-mcp and covered by its own trust & security page. The server
+  is a broader surface than the Developer API: it drives journeys, audiences, segments, emails, tokens
+  and analytics through specialist agents, most of which have no REST equivalent. tools/list is OAuth-gated
+  (probed 2026-08-13: HTTP 401 invalid_token with a WWW-Authenticate challenge pointing at /.well-known/oauth-protected-resource),
+  so the tool list below is transcribed from the provider''s published tool documentation, names and descriptions
+  only. Input schemas require authenticated introspection with a connected-app token.'
 server:
   name: Inflection MCP
   transport: http
@@ -25,26 +23,33 @@ server:
   protocol: OAuth 2.1 + PKCE (S256 only)
   hosted_by: Inflection (AWS, US region, multi-tenant)
 deployment:
-  mode: remote
-  endpoint: https://mcp.inflection.io/
-  auth: oauth
-  verified: probed
-  note: >-
-    No stdio/npx package is published; the only shipped surface is the hosted HTTPS endpoint. Personal
-    Access Tokens explicitly do NOT work for MCP — clients authenticate through a connected app's
-    OAuth 2.1 flow, with Dynamic Client Registration for Claude/ChatGPT-class clients.
+  mode: none
+  verified: derived
+  tools: 18
+  checked: '2026-08-12'
+  source: catalog MCP census
 x-evidence:
   fetched: '2026-08-13'
   probes:
-  - {url: 'https://mcp.inflection.io/', method: POST tools/list, http_status: 401, detail: 'WWW-Authenticate: Bearer error="invalid_token", resource_metadata="https://mcp.inflection.io/.well-known/oauth-protected-resource"'}
-  - {url: 'https://mcp.inflection.io/.well-known/oauth-protected-resource', http_status: 200, detail: RFC 9728 protected-resource metadata}
-  - {url: 'https://auth-v2.inflection.io/.well-known/oauth-authorization-server', http_status: 200, detail: RFC 8414 authorization-server metadata}
-  - {url: 'https://mcp.inflection.io/mcp', http_status: 404}
-  - {url: 'https://mcp.inflection.io/sse', http_status: 404}
+  - url: https://mcp.inflection.io/
+    method: POST tools/list
+    http_status: 401
+    detail: 'WWW-Authenticate: Bearer error="invalid_token", resource_metadata="https://mcp.inflection.io/.well-known/oauth-protected-resource"'
+  - url: https://mcp.inflection.io/.well-known/oauth-protected-resource
+    http_status: 200
+    detail: RFC 9728 protected-resource metadata
+  - url: https://auth-v2.inflection.io/.well-known/oauth-authorization-server
+    http_status: 200
+    detail: RFC 8414 authorization-server metadata
+  - url: https://mcp.inflection.io/mcp
+    http_status: 404
+  - url: https://mcp.inflection.io/sse
+    http_status: 404
 authorization:
   authorization_server: https://auth-v2.inflection.io/
   protected_resource_metadata: https://mcp.inflection.io/.well-known/oauth-protected-resource
-  scopes_supported: [inflection_app]
+  scopes_supported:
+  - inflection_app
   dynamic_client_registration: https://auth-v2.inflection.io/client-app/connect/register
   access_token_lifetime_seconds: 900
   refresh_token_rotation: true
@@ -52,55 +57,64 @@ authorization:
 tools:
 - name: ask_agent
   category: agents
-  description: >-
-    Start or poll an Inflection specialist agent run. Modes: pass agent_type + prompt to start,
-    or run_id to poll. agent_type is one of audience, content, segment, token. Long-polls ~12s.
-    Also answers domain Q&A.
+  description: 'Start or poll an Inflection specialist agent run. Modes: pass agent_type + prompt to start,
+    or run_id to poll. agent_type is one of audience, content, segment, token. Long-polls ~12s. Also answers
+    domain Q&A.'
 - name: list_platform_assets
   category: platform-crud
-  description: >-
-    List or search any asset type — journey, email, audience, segment, static_list, email_token,
-    webhook, inbound_webhook, form, account, conversion, salesforce_opportunity — with keyword,
-    paging and type-specific filters.
+  description: List or search any asset type — journey, email, audience, segment, static_list, email_token,
+    webhook, inbound_webhook, form, account, conversion, salesforce_opportunity — with keyword, paging
+    and type-specific filters.
 - name: get_platform_asset
   category: platform-crud
-  description: Fetch one asset by ID (journey, email, segment, email_token, static_list, account, webhook, inbound_webhook, form, conversion, salesforce_opportunity).
+  description: Fetch one asset by ID (journey, email, segment, email_token, static_list, account, webhook,
+    inbound_webhook, form, conversion, salesforce_opportunity).
 - name: create_platform_asset
   category: platform-crud
-  description: 'Create an asset: journey, email (including clone via clone_from), email_token, tag, folder, static_list.'
+  description: 'Create an asset: journey, email (including clone via clone_from), email_token, tag, folder,
+    static_list.'
 - name: update_platform_asset
   category: platform-crud
-  description: 'Patch an asset: email, email_content, journey, email_token, business_context, tag_asset, move_asset, folder, static_list rename.'
+  description: 'Patch an asset: email, email_content, journey, email_token, business_context, tag_asset,
+    move_asset, folder, static_list rename.'
 - name: get_schema
   category: discovery
-  description: Return schema for person, product_activity, product_events, marketing_events, event_properties, filter_types, filters_meta, operators, email_token_columns, token_functions.
+  description: Return schema for person, product_activity, product_events, marketing_events, event_properties,
+    filter_types, filters_meta, operators, email_token_columns, token_functions.
 - name: get_platform_context
   category: discovery
   description: Return business_context, email_settings, folders, tags, settings for the workspace.
 - name: data_dictionary
   category: discovery
-  description: Browse real workspace data — entities (contact, account, product_user, organisation, puom), fields, distributions and distinct values across 5 query types.
+  description: Browse real workspace data — entities (contact, account, product_user, organisation, puom),
+    fields, distributions and distinct values across 5 query types.
 - name: list_artifacts
   category: artifacts
-  description: List asset drafts produced by a run in the current thread (DYNAMIC_LIST, EMAIL_TEMPLATE, SEGMENT_CATEGORY, JOURNEY and others).
+  description: List asset drafts produced by a run in the current thread (DYNAMIC_LIST, EMAIL_TEMPLATE,
+    SEGMENT_CATEGORY, JOURNEY and others).
 - name: get_artifacts
   category: artifacts
   description: Retrieve the content of asset drafts produced by a run in the current thread.
 - name: get_analytics_report
   category: analytics
-  description: Aggregate and rollup metrics — campaign_stats, campaign_aggregate, journey_rollup, journey_conversions, active_sends.
+  description: Aggregate and rollup metrics — campaign_stats, campaign_aggregate, journey_rollup, journey_conversions,
+    active_sends.
 - name: get_analytics_breakdown
   category: analytics
-  description: Paginated per-entity detail — top_links, top_email_client_opens, top_email_client_clicks, recipient_engagement, campaign_runs, form_submissions, inbound_webhook_submissions.
+  description: Paginated per-entity detail — top_links, top_email_client_opens, top_email_client_clicks,
+    recipient_engagement, campaign_runs, form_submissions, inbound_webhook_submissions.
 - name: get_contact_info
   category: contacts
-  description: 'Contact lookup with three query types: lookup (by email, composite profile), activity_log, sf_opportunities, sf_campaigns.'
+  description: 'Contact lookup with three query types: lookup (by email, composite profile), activity_log,
+    sf_opportunities, sf_campaigns.'
 - name: get_knowledge
   category: knowledge
-  description: Access the skill tree, cross-knowledge search and Help Center search; surfaces published skills such as grade-html-email.
+  description: Access the skill tree, cross-knowledge search and Help Center search; surfaces published
+    skills such as grade-html-email.
 - name: set_email_version
   category: personalized-email
-  description: Set one contact's subject, preheader and HTML on a Personalized Email Asset. Validated on arrival (known contact, unsubscribe link present, no other tokens, 500 KB cap).
+  description: Set one contact's subject, preheader and HTML on a Personalized Email Asset. Validated
+    on arrival (known contact, unsubscribe link present, no other tokens, 500 KB cap).
 - name: list_email_versions
   category: personalized-email
   description: List the existing per-contact versions on a Personalized Email Asset.

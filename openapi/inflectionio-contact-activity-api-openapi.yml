@@ -1,9 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Inflection Developer API — Contact Activity
+  title: Inflection Developer Contact Activity API
   version: '1.0'
-  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles,
-    product and marketing activity, static lists, and emails.'
+  description: 'A REST API for reading and writing the people in your Inflection workspace: their profiles, product and marketing activity, static lists, and emails.'
 servers:
 - url: https://api.inflection.io
   description: Production
@@ -18,8 +17,7 @@ paths:
       summary: Get product activity
       tags:
       - Contact Activity
-      description: A paged list of in-app product events (login, signup, custom events). Empty for a contact
-        with no product activity, and for an unknown contact id.
+      description: A paged list of in-app product events (login, signup, custom events). Empty for a contact with no product activity, and for an unknown contact id.
       parameters:
       - name: id
         in: path
@@ -60,8 +58,7 @@ paths:
       summary: Get marketing activity
       tags:
       - Contact Activity
-      description: 'A paged list of marketing touches for the contact: email sends, opens, clicks, and
-        journey activity.'
+      description: 'A paged list of marketing touches for the contact: email sends, opens, clicks, and journey activity.'
       parameters:
       - name: id
         in: path
@@ -81,9 +78,7 @@ paths:
       summary: Get activity log
       tags:
       - Contact Activity
-      description: 'A paged change log of the contact''s record: updates to contact properties and to
-        the properties of the underlying product-user record. For engagement and events, use the product-activity
-        and marketing-activity endpoints instead.'
+      description: 'A paged change log of the contact''s record: updates to contact properties and to the properties of the underlying product-user record. For engagement and events, use the product-activity and marketing-activity endpoints instead.'
       parameters:
       - name: id
         in: path
@@ -103,9 +98,7 @@ paths:
       summary: Get Salesforce record
       tags:
       - Contact Activity
-      description: Returns the contact's mapped Salesforce record as a free-form object. If the contact
-        exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns
-        `404`.
+      description: Returns the contact's mapped Salesforce record as a free-form object. If the contact exists but has no Salesforce record, `data` is omitted (still `200`). A bogus contact id returns `404`.
       parameters:
       - name: id
         in: path
@@ -122,12 +115,6 @@ paths:
         '404':
           description: Contact id does not exist.
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ
-        permission for GET, WRITE for POST/PATCH/DELETE.
   schemas:
     Envelope:
       type: object
@@ -172,3 +159,8 @@ components:
             timestamp:
               type: string
               format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Personal Access Token or OAuth 2.1 access token, sent as a bearer credential. READ permission for GET, WRITE for POST/PATCH/DELETE.
