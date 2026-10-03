@@ -211,6 +211,20 @@ paths:
                       $ref: '#/components/schemas/Transaction'
 components:
   schemas:
+    ContactProperties:
+      type: object
+      description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_name:
+          type: string
+        _source:
+          type: string
+          description: Set by Inflection to identify the write source.
+      additionalProperties: true
     Transaction:
       type: object
       properties:
@@ -241,17 +255,6 @@ components:
                     - UPDATED
                     - NO_CHANGE
                     - FAILED
-    Contact:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 0001760c4a86bc38a4a60bcceae32540
-        email:
-          type: string
-          format: email
-        properties:
-          $ref: '#/components/schemas/ContactProperties'
     Envelope:
       type: object
       properties:
@@ -295,20 +298,17 @@ components:
             timestamp:
               type: string
               format: date-time
-    ContactProperties:
+    Contact:
       type: object
-      description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
       properties:
-        first_name:
+        id:
           type: string
-        last_name:
+          example: 0001760c4a86bc38a4a60bcceae32540
+        email:
           type: string
-        company_name:
-          type: string
-        _source:
-          type: string
-          description: Set by Inflection to identify the write source.
-      additionalProperties: true
+          format: email
+        properties:
+          $ref: '#/components/schemas/ContactProperties'
   securitySchemes:
     bearerAuth:
       type: http
