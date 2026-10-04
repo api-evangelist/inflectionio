@@ -211,6 +211,60 @@ paths:
                       $ref: '#/components/schemas/Transaction'
 components:
   schemas:
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0001760c4a86bc38a4a60bcceae32540
+        email:
+          type: string
+          format: email
+        properties:
+          $ref: '#/components/schemas/ContactProperties'
+    Envelope:
+      type: object
+      properties:
+        data:
+          description: 'Payload: object or array, shape depends on the endpoint.'
+        pagination:
+          type: object
+          description: Present only on paged list endpoints.
+          properties:
+            pageNumber:
+              type: integer
+              example: 1
+            pageSize:
+              type: integer
+              example: 20
+            totalElements:
+              type: integer
+              example: 151
+            totalPages:
+              type: integer
+              example: 8
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorCode:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+        meta:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - SUCCESS
+              - FAILURE
+            timestamp:
+              type: string
+              format: date-time
     ContactProperties:
       type: object
       description: Keys must be snake_case. camelCase keys are silently ignored (saved as null).
@@ -255,60 +309,6 @@ components:
                     - UPDATED
                     - NO_CHANGE
                     - FAILED
-    Envelope:
-      type: object
-      properties:
-        data:
-          description: 'Payload: object or array, shape depends on the endpoint.'
-        pagination:
-          type: object
-          description: Present only on paged list endpoints.
-          properties:
-            pageNumber:
-              type: integer
-              example: 1
-            pageSize:
-              type: integer
-              example: 20
-            totalElements:
-              type: integer
-              example: 151
-            totalPages:
-              type: integer
-              example: 8
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              errorCode:
-                type: string
-              message:
-                type: string
-              detail:
-                type: string
-        meta:
-          type: object
-          properties:
-            status:
-              type: string
-              enum:
-              - SUCCESS
-              - FAILURE
-            timestamp:
-              type: string
-              format: date-time
-    Contact:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 0001760c4a86bc38a4a60bcceae32540
-        email:
-          type: string
-          format: email
-        properties:
-          $ref: '#/components/schemas/ContactProperties'
   securitySchemes:
     bearerAuth:
       type: http
