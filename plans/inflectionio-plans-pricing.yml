@@ -94,3 +94,15 @@ free_tier:
 trial:
   available: false
   note: The pricing page offers "Talk to Sales" and "Book a Demo"; no self-serve trial is published.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models: []
+  units: []
+  plans:
+  - name: Inflection
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
