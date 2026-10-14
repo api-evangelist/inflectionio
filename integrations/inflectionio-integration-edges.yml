@@ -3,11 +3,11 @@ edges:
 - partner_name: Twilio Segment
   partner: segment
   partner_match: aggregator
-  marketplace: coverage
+  marketplace: segment-partner-destinations
   channel: partner-built
-  direction: partner-built
-  type: coverage
-  relationship: connector-coverage
+  direction: third-party
+  type: marketplace
+  relationship: platform-app
   evidence: https://www.twilio.com/docs/segment/connections/destinations/catalog/inflection
   coverage_role:
   - destination
@@ -27,7 +27,29 @@ edges:
       - Track
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
+- partner_name: Okta (own)
+  partner: okta
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.okta.com/integrations/Inflection_io/
+  mirror_of: okta/integrations/okta-integration-edges.yml
+  apps:
+  - Inflection.io
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Single Sign-On
+  badges:
+  - OKTA_VERIFIED
+  features:
+  - SAML
 method: searched
 checked:
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/inflection
+- okta/integrations/okta-integration-edges.yml
 source: https://www.twilio.com/docs/segment/connections/destinations/catalog/inflection
